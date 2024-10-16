@@ -1,4 +1,4 @@
-import { getRowsByGroup } from "./queries.js";
+import { getGroupsByBoard, getRowsByGroup } from "./queries.js";
 import type { MondayClient, MondayClientOptions } from "./types.js";
 
 const clients: Map<string, MondayClient> = new Map();
@@ -9,6 +9,7 @@ export function createMondayClient(options: MondayClientOptions): MondayClient {
   }
 
   const instance: MondayClient = {
+    getGroupsByBoard: getGroupsByBoard.bind(null, options),
     getRowsByGroup: getRowsByGroup.bind(null, options),
   };
 

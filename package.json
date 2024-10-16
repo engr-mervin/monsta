@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "npx eslint ."
+    "lint": "npx eslint .",
+    "dev": "tsx src/index.ts"
   },
   "keywords": [],
   "author": "John Mervin C. Bocatcat <mervin@eonox.dev> (https://www.eonox.dev/)",
@@ -15,6 +16,7 @@
     "@types/eslint__js": "^8.42.3",
     "eslint": "^9.12.0",
     "tsc-watch": "^6.2.0",
+    "tsx": "^4.19.1",
     "typescript": "^5.6.3",
     "typescript-eslint": "^8.8.1"
   }

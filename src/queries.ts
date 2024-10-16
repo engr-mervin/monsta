@@ -1,12 +1,16 @@
-import { GetGroupsByBoard } from "./mondayTypes.js";
-import type { MondayClientOptions, MondayRequestOptions, RowGroup } from "./types.js";
+import { Cell, Group, Row } from "./classes.js";
+import { MonstaError } from "./error.js";
+import { executeGraphQLQuery } from "./mondayService.js";
+import { GetGroupsByBoard, type GetRowsByGroup } from "./mondayTypes.js";
+import { QueryLevel, type MondayClientOptions, type MondayQueryRequestOptions } from "./types.js";
 
 export async function getGroupsByBoard(
   clientOptions: MondayClientOptions,
   boardId: string | number,
-  requestOptions: MondayRequestOptions = {}
-): Promise<RowGroup[]> {
-  const query = `query{
+  requestOptions: MondayQueryRequestOptions = { queryLevel: QueryLevel.Group }
+): Promise<Group[]> {
+  const query = `
+  query($id: [ID!]){
     boards(ids: $id) {
       id
       groups {
@@ -17,7 +21,7 @@ export async function getGroupsByBoard(
   }`;
 
   const variables = {
-    id: boardId,
+    id: [boardId],
   };
 
   const result = await executeGraphQLQuery<GetGroupsByBoard>(clientOptions, requestOptions, query, variables);
@@ -28,58 +32,77 @@ export async function getGroupsByBoard(
     throw new Error(`Board with board id: ${boardId} not found or you lack the necessary privileges to access this board.`);
   }
 
-  return board.groups.map((group) => ({
-    id: group.id,
-    title: group.title,
-    boardId: Number(board.id),
-  }));
+  return board.groups.map((group) => new Group(group.id, group.title, board.id));
 }
 
-export function getRowsByGroup(clientOptions: MondayClientOptions): string {
-  return "";
-}
-
-async function executeGraphQLQuery<T>(
+export async function getRowsByGroup(
   clientOptions: MondayClientOptions,
-  requestOptions: MondayRequestOptions,
-  query: string,
-  variables: Record<string, unknown>
-): Promise<T> {
-  if (typeof clientOptions.onStart === "function") {
-    clientOptions.onStart();
+  group: Group,
+  requestOptions: MondayQueryRequestOptions = { queryLevel: QueryLevel.Item }
+): Promise<Row[]> {
+  if (requestOptions.queryLevel === QueryLevel.Group) {
+    throw new MonstaError(
+      "query",
+      "getRowsByGroup",
+      `Query level chosen: ${requestOptions.queryLevel} is not applicable to the calling function: ${getRowsByGroup}.`
+    );
   }
-  if (typeof requestOptions.onStart === "function") {
-    requestOptions.onStart();
-  }
-  try {
-    //send Query
-    const response = await fetch("https://api.monday.com/v2", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${clientOptions.apiToken}`,
-      },
-      body: JSON.stringify({
-        query,
-        variables,
-      }),
-    });
+  const query = `
+    query($id: [ID!], $groupId: [String!]){
+        boards(ids: $id) {
+            id
+            groups(ids: $groupId) {
+                id
+                title
+                ${
+                  [QueryLevel.Cell, QueryLevel.Item].includes(requestOptions.queryLevel)
+                    ? `items_page {
+                        items {
+                            id
+                            name
+                            ${
+                              requestOptions.queryLevel === QueryLevel.Cell
+                                ? `
+                                column_values {
+                                    id
+                                    value
+                                    text
+                                    type
+                                }`
+                                : ``
+                            }
+                        }
+                    }`
+                    : ``
+                }
+            }
+        }
+    }`;
 
-    const result = (await response.json()) as T;
-    if (typeof clientOptions.onSuccess === "function") {
-      clientOptions.onSuccess(result);
-    }
-    if (typeof requestOptions.onSuccess === "function") {
-      requestOptions.onSuccess(result);
-    }
-    return result;
-  } catch (error: unknown) {
-    if (typeof clientOptions.onError === "function") {
-      clientOptions.onError(error);
-    }
-    if (typeof requestOptions.onError === "function") {
-      requestOptions.onError(error);
-    }
-    throw error;
+  const variables = {
+    id: group.boardId,
+    groupId: group.id,
+  };
+
+  const result = await executeGraphQLQuery<GetRowsByGroup>(clientOptions, requestOptions, query, variables);
+
+  const board = result.data.boards[0];
+
+  if (!board) {
+    throw new Error(`Board with board id: ${group.boardId} not found or you lack the necessary privilege to access this board.`);
   }
+
+  const foundGroup = board.groups[0];
+
+  if (!foundGroup) {
+    throw new Error(`Group with group id: ${group.id} not found or you lack the necessary privilege to access this group.`);
+  }
+
+  return foundGroup.items_page.items.map((row) => {
+    const cells: Record<string, Cell> = {};
+    row.column_values.forEach((col_value) => {
+      cells[col_value.id] = new Cell(col_value.id, col_value.text, col_value.type, JSON.parse(col_value.value));
+    });
+    return new Row(row.id, group.id, group.boardId, cells);
+  });
 }
