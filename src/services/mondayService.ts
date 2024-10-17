@@ -1,4 +1,4 @@
-import type { MondayClientOptions, MondayRequestOptions } from "./types.js";
+import type { MondayClientOptions, MondayRequestOptions } from "../types/types.js";
 
 export async function executeGraphQLQuery<T>(
   clientOptions: MondayClientOptions,

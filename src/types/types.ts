@@ -1,8 +1,10 @@
-import type { Group, Row } from "./classes.js";
+import { Group } from "../classes/Group";
+import { Item } from "../classes/Item";
 
 export interface MondayClient {
-  getGroupsByBoard: (boardId: string | number, requestOptions?: MondayQueryRequestOptions) => Promise<Group[]>;
-  getRowsByGroup: (group: Group, requestOptions?: MondayQueryRequestOptions) => Promise<Row[]>;
+  clientOptions: MondayClientOptions,
+  getGroupsByBoard: (boardId: number, requestOptions?: MondayQueryRequestOptions) => Promise<Group[]>;
+  getItemsByGroup: (group: Group_RowQuery, requestOptions?: MondayQueryRequestOptions) => Promise<Item[]>;
 }
 
 export enum QueryLevel {
@@ -30,11 +32,11 @@ export interface MondayRequestOptions extends MondayCommonOptions {
 }
 
 export type MondayQueryRequestOptions = MondayQueryCellRequestOptions | MondayQueryNotCellRequestOptions;
-interface MondayQueryCellRequestOptions extends MondayRequestOptions {
+export interface MondayQueryCellRequestOptions extends MondayRequestOptions {
   queryLevel: QueryLevel.Cell;
   columns: string[];
 }
-interface MondayQueryNotCellRequestOptions extends MondayRequestOptions {
+export interface MondayQueryNotCellRequestOptions extends MondayRequestOptions {
   queryLevel: QueryLevel.Group | QueryLevel.Item;
 }
 
@@ -48,4 +50,10 @@ export interface RowGroup {
   id: string;
   title: string;
   boardId: number;
+}
+
+
+export interface Group_RowQuery {
+  groupId: string;
+  boardId: number | string;
 }
