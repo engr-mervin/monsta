@@ -43,7 +43,7 @@ export interface MItemWithCells {
 }
 
 //BOARD
-interface MBoardWithGroups {
+export interface MBoardWithGroups {
   boards: [
     {
       id: string;
@@ -52,7 +52,7 @@ interface MBoardWithGroups {
   ];
 }
 
-interface MBoardWithGroupsWithItems {
+export interface MBoardWithGroupsWithItems {
   boards: [
     {
       id: string;
@@ -70,12 +70,6 @@ export interface MBoardWithGroupsWithItemsWithCells {
   ];
 }
 
-export type GetGroupsByBoard = BaseResponse<MBoardWithGroups>;
-export type GetGroupsByBoardWithItems = BaseResponse<MBoardWithGroupsWithItems>;
-export type GetGroupsByBoardWithItemsWithCells = BaseResponse<MBoardWithGroupsWithItemsWithCells>;
-
-export type GetItemsByGroup = BaseResponse<MBoardWithGroupsWithItems>;
-export type GetItemsByGroupWithCells = BaseResponse<MBoardWithGroupsWithItemsWithCells>;
 
 export type BaseResponse<T> = {
   data: T;

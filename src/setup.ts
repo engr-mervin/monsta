@@ -1,10 +1,10 @@
 import { getGroupsByBoard } from "./queries/getGroups.js";
 import { getItemsByGroup } from "./queries/getItems.js";
-import type { MondayClient, MondayClientOptions } from "./types/types.js";
+import type { MondayClient, ClientOptions } from "./types/types.js";
 
 const clients: Map<string, MondayClient> = new Map();
 
-export function createMondayClient(options: MondayClientOptions): MondayClient {
+export function createMondayClient(options: ClientOptions): MondayClient {
   if (clients.get(options.name)) {
     throw new Error(`Monday client with name: ${options.name} already exists.`);
   }

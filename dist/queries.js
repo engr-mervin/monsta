@@ -29,7 +29,7 @@ function getGroupsByBoard(clientOptions, boardId, requestOptions = { queryLevel:
         const variables = {
             id: [boardId],
         };
-        const result = yield (0, mondayService_js_1.executeGraphQLQuery)(clientOptions, requestOptions, query, variables);
+        const result = yield (0, Service_js_1.executeGraphQLQuery)(clientOptions, RequestOptions, query, variables);
         const board = result.data.boards[0];
         if (!board) {
             throw new Error(`Board with board id: ${boardId} not found or you lack the necessary privileges to access this board.`);
@@ -74,7 +74,7 @@ function getRowsByGroup(clientOptions, group, requestOptions = { queryLevel: typ
             id: group.boardId,
             groupId: group.id,
         };
-        const result = yield (0, mondayService_js_1.executeGraphQLQuery)(clientOptions, requestOptions, query, variables);
+        const result = yield (0, Service_js_1.executeGraphQLQuery)(clientOptions, RequestOptions, query, variables);
         const board = result.data.boards[0];
         if (!board) {
             throw new Error(`Board with board id: ${group.boardId} not found or you lack the necessary privilege to access this board.`);

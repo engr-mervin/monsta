@@ -1,6 +1,6 @@
-export const GET_ITEM_BY_GROUP_LEVEL_ITEM = `
-    query($id: [ID!], $groupId: [String!]){
-        boards(ids: $id) {
+export const GET_ITEMS_BY_GROUP_LEVEL_ITEM = `
+    query($boardId: [ID!], $groupId: [String!]){
+        boards(ids: $boardId) {
             id
             groups(ids: $groupId) {
                 id
@@ -15,9 +15,9 @@ export const GET_ITEM_BY_GROUP_LEVEL_ITEM = `
         }
     }`;
 
-export const GET_ITEM_BY_GROUP_LEVEL_CELL = `
-    query($id: [ID!], $groupId: [String!]){
-        boards(ids: $id) {
+export const GET_ITEMS_BY_GROUP_LEVEL_CELL = `
+    query($boardId: [ID!], $groupId: [String!], $cellId: [String!]){
+        boards(ids: $boardId) {
             id
             groups(ids: $groupId) {
                 id
@@ -26,7 +26,7 @@ export const GET_ITEM_BY_GROUP_LEVEL_CELL = `
                     items {
                         id
                         name
-                        column_values {
+                        column_values(ids: $cellId) {
                             id
                             value
                             text

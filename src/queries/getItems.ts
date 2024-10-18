@@ -1,27 +1,27 @@
 import { Cell } from "../classes/Cell";
 import { Item } from "../classes/Item";
 import { MonstaError } from "../error";
-import { GET_ITEM_BY_GROUP_LEVEL_CELL, GET_ITEM_BY_GROUP_LEVEL_ITEM } from "../query-strings/getItems";
+import { GET_ITEMS_BY_GROUP_LEVEL_CELL, GET_ITEMS_BY_GROUP_LEVEL_ITEM } from "../query-strings/getItems";
 import { executeGraphQLQuery } from "../services/mondayService";
-import { GetItemsByGroup, GetItemsByGroupWithCells } from "../types/mondayTypes";
+import { GetItemsByGroup, GetItemsByGroupWithCells } from "../types/getItems";
 import {
   Group_RowQuery,
-  MondayClientOptions,
-  MondayQueryCellRequestOptions,
-  MondayQueryNotCellRequestOptions,
-  MondayQueryRequestOptions,
+  ClientOptions,
+  QueryCellRequestOptions,
+  QueryNotCellRequestOptions,
+  QueryRequestOptions,
   QueryLevel,
 } from "../types/types";
 
 async function getItemsByGroupLevelItem(
-  clientOptions: MondayClientOptions,
+  clientOptions: ClientOptions,
   group: Group_RowQuery,
-  requestOptions: MondayQueryNotCellRequestOptions
+  requestOptions: QueryNotCellRequestOptions
 ): Promise<Item[]>{
-  const query = GET_ITEM_BY_GROUP_LEVEL_ITEM;
+  const query = GET_ITEMS_BY_GROUP_LEVEL_ITEM;
 
   const variables = {
-    id: group.boardId,
+    boardId: group.boardId,
     groupId: group.groupId,
   };
 
@@ -46,15 +46,16 @@ async function getItemsByGroupLevelItem(
 }
 
 async function getItemsByGroupLevelCell(
-  clientOptions: MondayClientOptions,
+  clientOptions: ClientOptions,
   group: Group_RowQuery,
-  requestOptions: MondayQueryCellRequestOptions
+  requestOptions: QueryCellRequestOptions
 ){
-  const query = GET_ITEM_BY_GROUP_LEVEL_CELL;
+  const query = GET_ITEMS_BY_GROUP_LEVEL_CELL;
 
   const variables = {
-    id: group.boardId,
+    boardId: group.boardId,
     groupId: group.groupId,
+    cellId: requestOptions.columns,
   };
 
   
@@ -77,17 +78,16 @@ async function getItemsByGroupLevelCell(
 
   return board.groups[0].items_page.items.map((item) => {
     const cells: Record<string, Cell> = {};
-    const cols = item.column_values.filter((col) => requestOptions.columns.includes(col.id));
-    cols.forEach(col => cells[col.id] = new Cell(col.id, col.text, col.type, JSON.parse(col.value)));
+    item.column_values.forEach(col => cells[col.id] = new Cell(col.id, col.text, col.type, JSON.parse(col.value)));
     return new Item(item.id, item.name, group.groupId, Number(group.boardId), cells)
   })
 }
 
 
 export async function getItemsByGroup(
-  clientOptions: MondayClientOptions,
+  clientOptions: ClientOptions,
   group: Group_RowQuery,
-  requestOptions: MondayQueryRequestOptions = { queryLevel: QueryLevel.Item }
+  requestOptions: QueryRequestOptions = { queryLevel: QueryLevel.Item }
 ): Promise<Item[]> {
   const queryLevel = requestOptions.queryLevel;
   switch (queryLevel) {

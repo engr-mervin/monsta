@@ -2,9 +2,9 @@ import { Group } from "../classes/Group";
 import { Item } from "../classes/Item";
 
 export interface MondayClient {
-  clientOptions: MondayClientOptions,
-  getGroupsByBoard: (boardId: number, requestOptions?: MondayQueryRequestOptions) => Promise<Group[]>;
-  getItemsByGroup: (group: Group_RowQuery, requestOptions?: MondayQueryRequestOptions) => Promise<Item[]>;
+  clientOptions: ClientOptions,
+  getGroupsByBoard: (boardId: (string | number)[], requestOptions?: QueryRequestOptions) => Promise<Group[]>;
+  getItemsByGroup: (group: Group_RowQuery, requestOptions?: QueryRequestOptions) => Promise<Item[]>;
 }
 
 export enum QueryLevel {
@@ -19,7 +19,7 @@ export enum SubitemQueryLevel {
   SubitemCell = "cell", //Full subitem + subitem cell values
 }
 
-export interface MondayClientOptions extends MondayCommonOptions {
+export interface ClientOptions extends MondayCommonOptions {
   name: string;
   apiToken: string;
   version: string;
@@ -27,16 +27,16 @@ export interface MondayClientOptions extends MondayCommonOptions {
   cacheTTL?: number;
 }
 
-export interface MondayRequestOptions extends MondayCommonOptions {
+export interface RequestOptions extends MondayCommonOptions {
   noHooks?: boolean;
 }
 
-export type MondayQueryRequestOptions = MondayQueryCellRequestOptions | MondayQueryNotCellRequestOptions;
-export interface MondayQueryCellRequestOptions extends MondayRequestOptions {
+export type QueryRequestOptions = QueryCellRequestOptions | QueryNotCellRequestOptions;
+export interface QueryCellRequestOptions extends RequestOptions {
   queryLevel: QueryLevel.Cell;
-  columns: string[];
+  columns?: string[];
 }
-export interface MondayQueryNotCellRequestOptions extends MondayRequestOptions {
+export interface QueryNotCellRequestOptions extends RequestOptions {
   queryLevel: QueryLevel.Group | QueryLevel.Item;
 }
 
