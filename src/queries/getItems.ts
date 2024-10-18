@@ -1,7 +1,11 @@
 import { Cell } from "../classes/Cell";
 import { Item } from "../classes/Item";
 import { MonstaError } from "../error";
-import { GET_ITEMS_BY_GROUP_LEVEL_CELL, GET_ITEMS_BY_GROUP_LEVEL_ITEM } from "../query-strings/getItems";
+import {
+  GET_ITEMS_BY_GROUP_LEVEL_CELL,
+  GET_ITEMS_BY_GROUP_LEVEL_CELL_ALL,
+  GET_ITEMS_BY_GROUP_LEVEL_ITEM,
+} from "../query-strings/getItems";
 import { executeGraphQLQuery } from "../services/mondayService";
 import { GetItemsByGroup, GetItemsByGroupWithCells } from "../types/getItems";
 import {
@@ -17,7 +21,7 @@ async function getItemsByGroupLevelItem(
   clientOptions: ClientOptions,
   group: Group_RowQuery,
   requestOptions: QueryNotCellRequestOptions
-): Promise<Item[]>{
+): Promise<Item[]> {
   const query = GET_ITEMS_BY_GROUP_LEVEL_ITEM;
 
   const variables = {
@@ -25,7 +29,6 @@ async function getItemsByGroupLevelItem(
     groupId: group.groupId,
   };
 
-  
   const result = await executeGraphQLQuery<GetItemsByGroup>(
     clientOptions,
     requestOptions,
@@ -33,32 +36,43 @@ async function getItemsByGroupLevelItem(
     variables
   );
 
-  if(!result.data.boards[0]){
+  if (!result.data.boards[0]) {
     throw new MonstaError("query", `No board found with id: ${group.boardId}`);
   }
   const board = result.data.boards[0];
 
-  if(!board.groups[0]){
-    throw new MonstaError("query", `No group found with id: ${group.groupId}, or group is not associated with board id: ${group.boardId}`);
+  if (!board.groups[0]) {
+    throw new MonstaError(
+      "query",
+      `No group found with id: ${group.groupId}, or group is not associated with board id: ${group.boardId}`
+    );
   }
 
-  return board.groups[0].items_page.items.map((item) => new Item(item.id, item.name, group.groupId, Number(group.boardId)))
+  return board.groups[0].items_page.items.map(
+    (item) => new Item(item.id, item.name, group.groupId, Number(group.boardId))
+  );
 }
 
 async function getItemsByGroupLevelCell(
   clientOptions: ClientOptions,
   group: Group_RowQuery,
   requestOptions: QueryCellRequestOptions
-){
-  const query = GET_ITEMS_BY_GROUP_LEVEL_CELL;
+) {
+  const query = requestOptions.columns
+    ? GET_ITEMS_BY_GROUP_LEVEL_CELL
+    : GET_ITEMS_BY_GROUP_LEVEL_CELL_ALL;
 
-  const variables = {
-    boardId: group.boardId,
-    groupId: group.groupId,
-    cellId: requestOptions.columns,
-  };
+  const variables = requestOptions.columns
+    ? {
+        boardId: group.boardId,
+        groupId: group.groupId,
+        cellId: requestOptions.columns,
+      }
+    : {
+        boardId: group.boardId,
+        groupId: group.groupId,
+      };
 
-  
   const result = await executeGraphQLQuery<GetItemsByGroupWithCells>(
     clientOptions,
     requestOptions,
@@ -66,23 +80,31 @@ async function getItemsByGroupLevelCell(
     variables
   );
 
-  
-  if(!result.data.boards[0]){
+  if (!result.data.boards[0]) {
     throw new MonstaError("query", `No board found with id: ${group.boardId}`);
   }
   const board = result.data.boards[0];
 
-  if(!board.groups[0]){
-    throw new MonstaError("query", `No group found with id: ${group.groupId}, or group is not associated with board id: ${group.boardId}`);
+  if (!board.groups[0]) {
+    throw new MonstaError(
+      "query",
+      `No group found with id: ${group.groupId}, or group is not associated with board id: ${group.boardId}`
+    );
   }
 
   return board.groups[0].items_page.items.map((item) => {
-    const cells: Record<string, Cell> = {};
-    item.column_values.forEach(col => cells[col.id] = new Cell(col.id, col.text, col.type, JSON.parse(col.value)));
-    return new Item(item.id, item.name, group.groupId, Number(group.boardId), cells)
-  })
+    const cells: Cell[] = item.column_values.map(
+      (col) => new Cell(col.id, col.text, col.type, JSON.parse(col.value))
+    );
+    return new Item(
+      item.id,
+      item.name,
+      group.groupId,
+      Number(group.boardId),
+      cells
+    );
+  });
 }
-
 
 export async function getItemsByGroup(
   clientOptions: ClientOptions,
@@ -97,9 +119,17 @@ export async function getItemsByGroup(
         `Query level chosen: ${queryLevel} is not applicable to the calling function: getItemsByGroup.`
       );
     case QueryLevel.Item:
-      return await getItemsByGroupLevelItem(clientOptions, group, requestOptions);
+      return await getItemsByGroupLevelItem(
+        clientOptions,
+        group,
+        requestOptions
+      );
     case QueryLevel.Cell:
-      return await getItemsByGroupLevelCell(clientOptions, group, requestOptions);
+      return await getItemsByGroupLevelCell(
+        clientOptions,
+        group,
+        requestOptions
+      );
     default:
       throw new MonstaError(
         "query",

@@ -4,6 +4,7 @@ import { Item } from "../classes/Item";
 import { MonstaError } from "../error";
 import {
   GET_GROUPS_BY_BOARD_LEVEL_CELL,
+  GET_GROUPS_BY_BOARD_LEVEL_CELL_ALL,
   GET_GROUPS_BY_BOARD_LEVEL_GROUP,
   GET_GROUPS_BY_BOARD_LEVEL_ITEM,
 } from "../query-strings/getGroups";
@@ -92,12 +93,18 @@ async function getGroupsByBoardLevelCell(
   boardId: (string | number)[],
   requestOptions: QueryCellRequestOptions
 ): Promise<Group[]> {
-  const query = GET_GROUPS_BY_BOARD_LEVEL_CELL;
+  const query = requestOptions.columns
+    ? GET_GROUPS_BY_BOARD_LEVEL_CELL
+    : GET_GROUPS_BY_BOARD_LEVEL_CELL_ALL;
 
-  const variables = {
-    boardId: boardId,
-    cellId: requestOptions.columns,
-  };
+  const variables = requestOptions.columns
+    ? {
+        boardId,
+        cellId: requestOptions.columns,
+      }
+    : {
+        boardId,
+      };
 
   const result = await executeGraphQLQuery<GetGroupsByBoardWithItemsWithCells>(
     clientOptions,
@@ -117,15 +124,8 @@ async function getGroupsByBoardLevelCell(
 
   return board.groups.map((group) => {
     const items = group.items_page.items.map((item) => {
-      const cells: Record<string, Cell> = {};
-      item.column_values.forEach(
-        (col) =>
-          (cells[col.id] = new Cell(
-            col.id,
-            col.text,
-            col.type,
-            JSON.parse(col.value)
-          ))
+      const cells: Cell[] = item.column_values.map(
+        (col) => new Cell(col.id, col.text, col.type, JSON.parse(col.value))
       );
       return new Item(item.id, item.name, group.id, Number(board.id), cells);
     });

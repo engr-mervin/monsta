@@ -48,3 +48,26 @@ export const GET_GROUPS_BY_BOARD_LEVEL_CELL = `
             }
       }
     }`;
+
+export const GET_GROUPS_BY_BOARD_LEVEL_CELL_ALL = `
+query($boardId: [ID!]){
+      boards(ids: $boardId) {
+        id
+        groups {
+                id
+                title
+                items_page {
+                    items {
+                        id
+                        name
+                        column_values {
+                            id
+                            value
+                            text
+                            type
+                        }
+                    }
+                }
+            }
+      }
+    }`;

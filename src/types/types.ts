@@ -1,12 +1,3 @@
-import { Group } from "../classes/Group";
-import { Item } from "../classes/Item";
-
-export interface MondayClient {
-  clientOptions: ClientOptions,
-  getGroupsByBoard: (boardId: (string | number)[], requestOptions?: QueryRequestOptions) => Promise<Group[]>;
-  getItemsByGroup: (group: Group_RowQuery, requestOptions?: QueryRequestOptions) => Promise<Item[]>;
-}
-
 export enum QueryLevel {
   Group = "group", //Only group metadata
   Item = "item", //Only item ids
@@ -56,4 +47,10 @@ export interface RowGroup {
 export interface Group_RowQuery {
   groupId: string;
   boardId: number | string;
+}
+
+export interface Item_CellQuery {
+  groupId: string;
+  boardId: number | string;
+  itemId: number | string;
 }
