@@ -1,14 +1,14 @@
-import { Cell } from "../classes/Cell";
-import { Group } from "../classes/Group";
-import { Item } from "../classes/Item";
-import { MonstaError } from "../error";
+import { Cell } from "../../classes/Cell";
+import { Group } from "../../classes/Group";
+import { Item } from "../../classes/Item";
+import { MonstaError } from "../../error";
 import {
   GET_GROUPS_BY_BOARD_LEVEL_CELL,
   GET_GROUPS_BY_BOARD_LEVEL_CELL_ALL,
   GET_GROUPS_BY_BOARD_LEVEL_GROUP,
   GET_GROUPS_BY_BOARD_LEVEL_ITEM,
-} from "../query-strings/getGroups";
-import { executeGraphQLQuery } from "../services/mondayService";
+} from "../strings/getGroups";
+import { executeGraphQLQuery } from "../../services/mondayService";
 import {
   GetGroupsByBoard,
   GetGroupsByBoardWithItems,
@@ -20,7 +20,7 @@ import {
   QueryLevel,
   QueryNotCellRequestOptions,
   QueryCellRequestOptions,
-} from "../types/types";
+} from "../../types/types";
 
 async function getGroupsByBoardLevelGroup(
   clientOptions: ClientOptions,

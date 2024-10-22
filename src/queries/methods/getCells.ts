@@ -1,11 +1,11 @@
-import { Cell } from "../classes/Cell";
-import { MonstaError } from "../error";
+import { Cell } from "../../classes/Cell";
+import { MonstaError } from "../../error";
 import {
   GET_CELLS_BY_ITEM_LEVEL_CELL,
   GET_CELLS_BY_ITEM_LEVEL_CELL_ALL,
-} from "../query-strings/getCells";
+} from "../strings/getCells";
 
-import { executeGraphQLQuery } from "../services/mondayService";
+import { executeGraphQLQuery } from "../../services/mondayService";
 import { GetCellsByItemWithCells } from "../types/getCells";
 import {
   ClientOptions,
@@ -13,7 +13,7 @@ import {
   QueryRequestOptions,
   QueryLevel,
   Item_CellQuery,
-} from "../types/types";
+} from "../../types/types";
 
 async function getCellsByItemLevelCell(
   clientOptions: ClientOptions,

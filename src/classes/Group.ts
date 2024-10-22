@@ -20,4 +20,8 @@ export class Group {
       this.items = _items;
     }
   }
+
+  public getItemByCellValue(cellValue: string){
+
+  }
 }

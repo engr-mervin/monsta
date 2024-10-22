@@ -1,6 +1,6 @@
-import { getCellsByItem } from "../queries/getCells";
-import { getGroupsByBoard } from "../queries/getGroups";
-import { getItemsByGroup } from "../queries/getItems";
+import { getCellsByItem } from "../queries/methods/getCells";
+import { getGroupsByBoard } from "../queries/methods/getGroups";
+import { getItemsByGroup } from "../queries/methods/getItems";
 import { Group_RowQuery, ClientOptions, QueryRequestOptions, QueryLevel, Item_CellQuery } from "../types/types";
 
 export class MondayClient {

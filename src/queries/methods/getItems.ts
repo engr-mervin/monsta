@@ -1,12 +1,12 @@
-import { Cell } from "../classes/Cell";
-import { Item } from "../classes/Item";
-import { MonstaError } from "../error";
+import { Cell } from "../../classes/Cell";
+import { Item } from "../../classes/Item";
+import { MonstaError } from "../../error";
 import {
   GET_ITEMS_BY_GROUP_LEVEL_CELL,
   GET_ITEMS_BY_GROUP_LEVEL_CELL_ALL,
   GET_ITEMS_BY_GROUP_LEVEL_ITEM,
-} from "../query-strings/getItems";
-import { executeGraphQLQuery } from "../services/mondayService";
+} from "../strings/getItems";
+import { executeGraphQLQuery } from "../../services/mondayService";
 import { GetItemsByGroup, GetItemsByGroupWithCells } from "../types/getItems";
 import {
   Group_RowQuery,
@@ -15,7 +15,7 @@ import {
   QueryNotCellRequestOptions,
   QueryRequestOptions,
   QueryLevel,
-} from "../types/types";
+} from "../../types/types";
 
 async function getItemsByGroupLevelItem(
   clientOptions: ClientOptions,
