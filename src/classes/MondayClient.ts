@@ -1,3 +1,4 @@
+import { getBoardsByWorkspace } from "../queries/methods/getBoards";
 import { getCellsByItem } from "../queries/methods/getCells";
 import { getGroupsByBoard } from "../queries/methods/getGroups";
 import { getItemsByGroup } from "../queries/methods/getItems";
