@@ -3,6 +3,7 @@
 //Add boards of workspace query
 //Add subitems query
 //Add method (get item by value) in Group
+//Pass client itself instead of client options in classes
 
 /**
   addColumnToBoard: NO,

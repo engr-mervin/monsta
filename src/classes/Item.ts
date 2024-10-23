@@ -1,4 +1,5 @@
 import { getCellsByItem } from "../queries/methods/getCells";
+import { __DEV__ } from "../setup";
 import { ClientOptions } from "../types/types";
 import { Cell } from "./Cell";
 
@@ -8,8 +9,7 @@ export class Item {
   public readonly name: string;
   public readonly groupId: string;
   public readonly boardId: number;
-  private cellMapping: Record<string, Cell> = {};
-  private cellsLoaded: boolean;
+  private cellMapping: Record<string, Cell> | undefined = undefined;
   private cells?: Cell[];
 
   constructor(
@@ -25,28 +25,50 @@ export class Item {
     this.name = _name;
     this.groupId = _groupId;
     this.boardId = _boardId;
-    if(_cells){
-        this.cells = _cells;
-        this.buildMapping();
-        this.cellsLoaded = true;
-    } else {
-      this.cellsLoaded = false;
+    if (_cells) {
+      this.cells = _cells;
+      this.buildMapping();
     }
   }
 
-  private buildMapping(){
-    if(this.cells){
+  private buildMapping() {
+    if (this.cells) {
       this.cellMapping = {};
-      this.cells.forEach((cell) =>  this.cellMapping[cell.columnId] = cell);
+      this.cells.forEach((cell) => (this.cellMapping![cell.columnId] = cell));
     }
   }
   public getCell(id: string): Cell | undefined {
-    return this.cellMapping[id];
+    if (this.cellMapping) {
+      return this.cellMapping[id];
+    } else if (__DEV__) {
+      console.warn(
+        `Trying to get cell value from an uninitialized item cells.`
+      );
+    }
+  }
+
+  public findCell(predicate: (cell: Cell) => boolean): Cell | undefined{
+    if (this.cells) {
+      return this.cells.find(predicate);
+    } else if (__DEV__) {
+      console.warn(
+        `Trying to get cell value from an uninitialized item cells.`
+      );
+    }
+  }
+
+  public getCellByValue(value: string | number): Cell | undefined {
+    if (this.cells) {
+      return this.cells.find((cell) => cell.text === value);
+    } else if (__DEV__) {
+      console.warn(
+        `Trying to get cell value from an uninitialized item cells.`
+      );
+    }
   }
 
   public async updateCells() {
     this.cells = await getCellsByItem(this.clientOptions, this);
     this.buildMapping();
-    this.cellsLoaded = true;
   }
 }

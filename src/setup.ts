@@ -2,6 +2,7 @@ import { MondayClient } from "./classes/MondayClient.js";
 import type { ClientOptions } from "./types/types.js";
 
 const clients: Map<string, MondayClient> = new Map();
+export const __DEV__: boolean = !!process.env.NODE_ENV;
 
 export function createMondayClient(options: ClientOptions): MondayClient {
   if (clients.get(options.name)) {

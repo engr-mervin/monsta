@@ -50,7 +50,7 @@ async function getGroupsByBoardLevelGroup(
   }
 
   return board.groups.map(
-    (group) => new Group(group.id, group.title, Number(board.id))
+    (group) => new Group(clientOptions, group.id, group.title, Number(board.id))
   );
 }
 async function getGroupsByBoardLevelItem(
@@ -82,9 +82,9 @@ async function getGroupsByBoardLevelItem(
 
   return board.groups.map((group) => {
     const items = group.items_page.items.map(
-      (item) => new Item(item.id, item.name, group.id, Number(board.id))
+      (item) => new Item(clientOptions, item.id, item.name, group.id, Number(board.id))
     );
-    return new Group(group.id, group.title, Number(board.id), items);
+    return new Group(clientOptions, group.id, group.title, Number(board.id), items);
   });
 }
 
@@ -127,9 +127,9 @@ async function getGroupsByBoardLevelCell(
       const cells: Cell[] = item.column_values.map(
         (col) => new Cell(col.id, col.text, col.type, JSON.parse(col.value))
       );
-      return new Item(item.id, item.name, group.id, Number(board.id), cells);
+      return new Item(clientOptions, item.id, item.name, group.id, Number(board.id), cells);
     });
-    return new Group(group.id, group.title, Number(board.id), items);
+    return new Group(clientOptions, group.id, group.title, Number(board.id), items);
   });
 }
 

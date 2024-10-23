@@ -49,7 +49,7 @@ async function getItemsByGroupLevelItem(
   }
 
   return board.groups[0].items_page.items.map(
-    (item) => new Item(item.id, item.name, group.groupId, Number(group.boardId))
+    (item) => new Item(clientOptions, item.id, item.name, group.groupId, Number(group.boardId))
   );
 }
 
@@ -97,6 +97,7 @@ async function getItemsByGroupLevelCell(
       (col) => new Cell(col.id, col.text, col.type, JSON.parse(col.value))
     );
     return new Item(
+      clientOptions,
       item.id,
       item.name,
       group.groupId,
