@@ -10,6 +10,9 @@ export const GET_CELLS_BY_ITEM_LEVEL_CELL = `
                         id
                         name
                         column_values(ids: $cellId) {
+                            column {
+                                title
+                            }
                             id
                             value
                             text
@@ -33,6 +36,9 @@ export const GET_CELLS_BY_ITEM_LEVEL_CELL_ALL = `
                         id
                         name
                         column_values {
+                            column {
+                                title
+                            }
                             id
                             value
                             text

@@ -75,11 +75,8 @@ export async function getCellsByItem(
 ): Promise<Cell[]> {
   const queryLevel = requestOptions.queryLevel;
   switch (queryLevel) {
+    case QueryLevel.Board:
     case QueryLevel.Group:
-      throw new MonstaError(
-        "query",
-        `Query level chosen: ${queryLevel} is not applicable to the calling function: getCellsByItem.`
-      );
     case QueryLevel.Item:
       throw new MonstaError(
         "query",

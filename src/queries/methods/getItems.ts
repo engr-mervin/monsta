@@ -114,6 +114,7 @@ export async function getItemsByGroup(
 ): Promise<Item[]> {
   const queryLevel = requestOptions.queryLevel;
   switch (queryLevel) {
+    case QueryLevel.Board:
     case QueryLevel.Group:
       throw new MonstaError(
         "query",

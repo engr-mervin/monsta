@@ -1,18 +1,16 @@
-export const GET_GROUPS_BY_BOARD_LEVEL_GROUP = `
-    query($boardId: [ID!]){
-      boards(ids: $boardId) {
+export const GET_BOARDS_BY_WORKSPACE_LEVEL_BOARD = `
+    query($workspaceId: [ID!]){
+      boards(workspace_ids: $workspaceId) {
         id
-        groups {
-          id
-          title
-        }
+        name
       }
     }`;
 
-export const GET_GROUPS_BY_BOARD_LEVEL_ITEM = `
-    query($boardId: [ID!]){
-      boards(ids: $boardId) {
+export const GET_BOARDS_BY_WORKSPACE_LEVEL_GROUP = `
+    query($workspaceId: [ID!]){
+      boards(workspace_ids: $workspaceId) {
         id
+        name
         groups {
             id
             title
@@ -26,10 +24,30 @@ export const GET_GROUPS_BY_BOARD_LEVEL_ITEM = `
       }
     }`;
 
-export const GET_GROUPS_BY_BOARD_LEVEL_CELL = `
-    query($boardId: [ID!], $cellId: [String!]){
-      boards(ids: $boardId) {
+export const GET_BOARDS_BY_WORKSPACE_LEVEL_ITEM = `
+    query($workspaceId: [ID!]){
+      boards(workspace_ids: $workspaceId) {
         id
+        name
+        groups {
+                id
+                title
+                items_page {
+                    items {
+                        id
+                        name
+                    }
+                }
+            }
+        }
+      }
+    }`;
+
+export const GET_BOARDS_BY_WORKSPACE_LEVEL_CELL = `
+    query($workspaceId: [ID!]){
+      boards(workspace_ids: $workspaceId) {
+        id
+        name
         groups {
                 id
                 title
@@ -49,31 +67,6 @@ export const GET_GROUPS_BY_BOARD_LEVEL_CELL = `
                     }
                 }
             }
-      }
-    }`;
-
-export const GET_GROUPS_BY_BOARD_LEVEL_CELL_ALL = `
-query($boardId: [ID!]){
-      boards(ids: $boardId) {
-        id
-        groups {
-                id
-                title
-                items_page {
-                    items {
-                        id
-                        name
-                        column_values {
-                            column {
-                                title
-                            }
-                            id
-                            value
-                            text
-                            type
-                        }
-                    }
-                }
-            }
+        }
       }
     }`;

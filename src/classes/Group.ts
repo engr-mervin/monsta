@@ -37,7 +37,7 @@ export class Group {
     }
   }
 
-  public async updateItems(recursive: boolean = true) {
+  public async updateItems(recursive: boolean = false) {
     this.items = await getItemsByGroup(this.clientOptions, this);
     if (recursive) {
       await Promise.all(this.items.map(item => item.updateCells()));

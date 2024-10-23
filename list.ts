@@ -1,9 +1,12 @@
 //Refactor query string of items, remove boardid and groupid from parameters
 //Add include parameter to request options, include fields etc
-//Add boards of workspace query
+//Add boards of workspace query - OK
 //Add subitems query
-//Add method (get item by value) in Group
-//Pass client itself instead of client options in classes
+//Add method (get item by value) in Group - OK
+//Pass client itself instead of client options in classes - NA
+//Add options to include some columns in the query
+
+//ADD UTILS TO CONVERT MONDAY MGROUP TO GROUP etc and REFACTOR
 
 /**
   addColumnToBoard: NO,
@@ -19,10 +22,10 @@
   uploadFileToMondayColumn: NO,
   getRecordsByCompareColumnIdAndValue: YES,
   getRecordsByCompareColumnIdAndMultipleValues: YES,
-  getRecordsByGroupName: ,
+  getRecordsByGroupName: YES,
   removeRecord:,
   archiveRecord:,
-  getValueByColumnId:,
+  getValueByColumnId: ,
   getValueByColumnTitle:,
   getValueObjByColumnId:,
   getValueByColumnIdAndType:,

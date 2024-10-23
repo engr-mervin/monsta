@@ -1,4 +1,5 @@
 export enum QueryLevel {
+  Board = "board", //only board metadata
   Group = "group", //Only group metadata
   Item = "item", //Only item ids
   Cell = "cell", //Including cell values
@@ -28,7 +29,7 @@ export interface QueryCellRequestOptions extends RequestOptions {
   columns?: string[];
 }
 export interface QueryNotCellRequestOptions extends RequestOptions {
-  queryLevel: QueryLevel.Group | QueryLevel.Item;
+  queryLevel: QueryLevel.Group | QueryLevel.Item | QueryLevel.Board;
 }
 
 interface MondayCommonOptions {
