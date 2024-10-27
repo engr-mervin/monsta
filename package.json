@@ -1,11 +1,14 @@
 {
   "name": "monsta",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/setup.js",
+  "types": "dist/setup.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "npx eslint .",
-    "dev": "tsx src/test.ts"
+    "dev": "tsx src/test.ts",
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [],
   "author": "John Mervin C. Bocatcat <mervin@eonox.dev> (https://www.eonox.dev/)",
