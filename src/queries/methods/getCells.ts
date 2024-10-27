@@ -26,14 +26,10 @@ async function getCellsByItemLevelCell(
 
   const variables = requestOptions.columns
     ? {
-        boardId: item.boardId,
-        groupId: item.groupId,
         itemId: item.itemId,
         cellId: requestOptions.columns,
       }
     : {
-        boardId: item.boardId,
-        groupId: item.groupId,
         itemId: item.itemId,
       };
 
@@ -44,27 +40,8 @@ async function getCellsByItemLevelCell(
     variables
   );
 
-  if (!result.data.boards[0]) {
-    throw new MonstaError("query", `No board found with id: ${item.boardId}`);
-  }
-  const board = result.data.boards[0];
-
-  if (!board.groups[0]) {
-    throw new MonstaError(
-      "query",
-      `No group found with id: ${item.groupId}, or group is not associated with board id: ${item.boardId}`
-    );
-  }
-
-  if (board.groups[0].items_page.items.length === 0) {
-    throw new MonstaError(
-      "query",
-      `No item found with id: ${item.itemId}, or item is not associated with board id: ${item.itemId}`
-    );
-  }
-
-  return board.groups[0].items_page.items[0].column_values.map(
-    (col) => new Cell(col.id, col.text, col.type, JSON.parse(col.value))
+  return result.data.items[0].column_values.map(
+    (col) => new Cell(col.id, col.text, col.type, JSON.parse(col.value), col.column.title)
   );
 }
 

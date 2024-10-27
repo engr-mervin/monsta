@@ -51,7 +51,10 @@ export interface Group_RowQuery {
 }
 
 export interface Item_CellQuery {
-  groupId: string;
-  boardId: number | string;
+  itemId: number | string;
+}
+
+
+export interface Item_SubitemQuery {
   itemId: number | string;
 }

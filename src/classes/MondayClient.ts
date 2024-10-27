@@ -40,5 +40,5 @@ export class MondayClient {
   }
 
 
-  /**Methods for specific query */
+  /**Methods for finding specific items */
 }

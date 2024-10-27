@@ -1,4 +1,13 @@
-import { BaseResponse, MBoardWithGroupsWithItemsWithCells } from "../../types/mondayTypes";
+import { BaseResponse, MCell } from "../../types/mondayTypes";
 
-export type GetCellsByItemWithCells = BaseResponse<MBoardWithGroupsWithItemsWithCells>;
+
+interface MItemWithCells {
+    items: {
+        id: string;
+        name: string;
+        column_values: MCell[]
+    }[]
+}
+
+export type GetCellsByItemWithCells = BaseResponse<MItemWithCells>;
 

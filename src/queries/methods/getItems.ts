@@ -94,7 +94,7 @@ async function getItemsByGroupLevelCell(
 
   return board.groups[0].items_page.items.map((item) => {
     const cells: Cell[] = item.column_values.map(
-      (col) => new Cell(col.id, col.text, col.type, JSON.parse(col.value))
+      (col) => new Cell(col.id, col.text, col.type, JSON.parse(col.value), col.column.title)
     );
     return new Item(
       clientOptions,

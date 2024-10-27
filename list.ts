@@ -1,10 +1,14 @@
-//Refactor query string of items, remove boardid and groupid from parameters
+//Refactor query string of items, remove boardid and groupid from parameters - OK
 //Add include parameter to request options, include fields etc
 //Add boards of workspace query - OK
 //Add subitems query
 //Add method (get item by value) in Group - OK
 //Pass client itself instead of client options in classes - NA
 //Add options to include some columns in the query
+
+//Because we treat item and subitems differently( with diff classes)
+//There's a small issue when trying to use getItems and passing in subitem id.
+//The subitems field will be empty and the class instance is item instead of subitems
 
 //ADD UTILS TO CONVERT MONDAY MGROUP TO GROUP etc and REFACTOR
 

@@ -21,6 +21,9 @@ interface MGroupWithItemsWithCells {
 }
 
 export interface MCell {
+  column: {
+    title: string;
+  };
   id: string;
   value: string;
   text: string | null;

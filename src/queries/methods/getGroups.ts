@@ -133,7 +133,7 @@ async function getGroupsByBoardLevelCell(
   return board.groups.map((group) => {
     const items = group.items_page.items.map((item) => {
       const cells: Cell[] = item.column_values.map(
-        (col) => new Cell(col.id, col.text, col.type, JSON.parse(col.value))
+        (col) => new Cell(col.id, col.text, col.type, JSON.parse(col.value), col.column.title)
       );
       return new Item(
         clientOptions,

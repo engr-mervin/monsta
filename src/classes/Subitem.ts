@@ -1,11 +1,9 @@
 import { getCellsByItem } from "../queries/methods/getCells";
-import { getSubitemsByItem } from "../queries/methods/getSubitems";
 import { __DEV__ } from "../setup";
 import { ClientOptions } from "../types/types";
 import { Cell } from "./Cell";
-import { Subitem } from "./Subitem";
 
-export class Item {
+export class Subitem {
   private readonly clientOptions: ClientOptions;
   public readonly itemId: string;
   public readonly name: string;
@@ -13,7 +11,6 @@ export class Item {
   public readonly boardId: number;
   private cellMapping: Record<string, Cell> | undefined = undefined;
   private cells?: Cell[];
-  private subitems?: Subitem[];
 
   constructor(
     _clientOptions: ClientOptions,
@@ -40,9 +37,9 @@ export class Item {
       this.cells.forEach((cell) => (this.cellMapping![cell.columnId] = cell));
     }
   }
-  public getCell(id: string): Cell | undefined {
+  public getCell(columnId: string): Cell | undefined {
     if (this.cellMapping) {
-      return this.cellMapping[id];
+      return this.cellMapping[columnId];
     } else if (__DEV__) {
       console.warn(
         `Trying to get cell value from an uninitialized item cells.`
@@ -50,7 +47,7 @@ export class Item {
     }
   }
 
-  public findCell(predicate: (cell: Cell) => boolean): Cell | undefined {
+  public findCell(predicate: (cell: Cell) => boolean): Cell | undefined{
     if (this.cells) {
       return this.cells.find(predicate);
     } else if (__DEV__) {
@@ -60,9 +57,9 @@ export class Item {
     }
   }
 
-  public getCellByValue(value: string | number | boolean | null): Cell | undefined {
+  public getCellByValue(value: string | number): Cell | undefined {
     if (this.cells) {
-      return this.cells.find((cell) => cell.getValue() === value);
+      return this.cells.find((cell) => cell.text === value);
     } else if (__DEV__) {
       console.warn(
         `Trying to get cell value from an uninitialized item cells.`
@@ -70,24 +67,8 @@ export class Item {
     }
   }
 
-  public getSubitemByValue(value: string, columnId?: string) {
-    if (this.subitems) {
-      return this.subitems.find((subitem) =>
-        subitem.findCell((cell) => (cell.text === value) && (columnId === undefined ? true : cell.columnId === columnId)) 
-      );
-    } else if (__DEV__) {
-      console.warn(
-        `Trying to get subitem from an uninitialized subitem list.`
-      );
-    }
-  }
-
   public async updateCells() {
     this.cells = await getCellsByItem(this.clientOptions, this);
     this.buildMapping();
-  }
-
-  public async updateSubitems() {
-    this.subitems = await getSubitemsByItem(this.clientOptions, this);
   }
 }
