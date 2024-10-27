@@ -2,16 +2,10 @@ import { Board } from "../../classes/Board";
 import { Cell } from "../../classes/Cell";
 import { Group } from "../../classes/Group";
 import { Item } from "../../classes/Item";
-import { MonstaError } from "../../error";
+import { MonstaaError } from "../../error";
 import { executeGraphQLQuery } from "../../services/mondayService";
 import { __DEV__ } from "../../setup";
-import {
-  ClientOptions,
-  QueryCellRequestOptions,
-  QueryLevel,
-  QueryNotCellRequestOptions,
-  QueryRequestOptions,
-} from "../../types/types";
+import { ClientOptions, QueryCellRequestOptions, QueryLevel, QueryNotCellRequestOptions, QueryRequestOptions } from "../../types/types";
 import {
   GET_BOARDS_BY_WORKSPACE_LEVEL_BOARD,
   GET_BOARDS_BY_WORKSPACE_LEVEL_CELL,
@@ -36,17 +30,10 @@ async function getBoardsByWorkspaceLevelBoard(
     workspaceId: [workspaceId],
   };
 
-  const result = await executeGraphQLQuery<getBoardsByWorkSpace>(
-    clientOptions,
-    requestOptions,
-    query,
-    variables
-  );
+  const result = await executeGraphQLQuery<getBoardsByWorkSpace>(clientOptions, requestOptions, query, variables);
   const boards = result.data.boards;
 
-  return boards.map(
-    (board) => new Board(clientOptions, Number(board.id), board.name)
-  );
+  return boards.map((board) => new Board(clientOptions, Number(board.id), board.name));
 }
 async function getBoardsByWorkspaceLevelGroup(
   clientOptions: ClientOptions,
@@ -59,19 +46,11 @@ async function getBoardsByWorkspaceLevelGroup(
     workspaceId: [workspaceId],
   };
 
-  const result = await executeGraphQLQuery<getBoardsByWorkSpaceWithGroups>(
-    clientOptions,
-    requestOptions,
-    query,
-    variables
-  );
+  const result = await executeGraphQLQuery<getBoardsByWorkSpaceWithGroups>(clientOptions, requestOptions, query, variables);
   const boards = result.data.boards;
 
   return boards.map((board) => {
-    const groups = board.groups.map(
-      (group) =>
-        new Group(clientOptions, group.id, group.title, Number(board.id))
-    );
+    const groups = board.groups.map((group) => new Group(clientOptions, group.id, group.title, Number(board.id)));
     return new Board(clientOptions, Number(board.id), board.name, groups);
   });
 }
@@ -86,34 +65,13 @@ async function getBoardsByWorkspaceLevelItem(
     workspaceId: [workspaceId],
   };
 
-  const result =
-    await executeGraphQLQuery<getBoardsByWorkSpaceWithGroupsWithItems>(
-      clientOptions,
-      requestOptions,
-      query,
-      variables
-    );
+  const result = await executeGraphQLQuery<getBoardsByWorkSpaceWithGroupsWithItems>(clientOptions, requestOptions, query, variables);
   const boards = result.data.boards;
 
   return boards.map((board) => {
     const groups = board.groups.map((group) => {
-      const items = group.items_page.items.map(
-        (item) =>
-          new Item(
-            clientOptions,
-            item.id,
-            item.name,
-            group.id,
-            Number(board.id)
-          )
-      );
-      return new Group(
-        clientOptions,
-        group.id,
-        group.title,
-        Number(board.id),
-        items
-      );
+      const items = group.items_page.items.map((item) => new Item(clientOptions, item.id, item.name, group.id, Number(board.id)));
+      return new Group(clientOptions, group.id, group.title, Number(board.id), items);
     });
     return new Board(clientOptions, Number(board.id), board.name, groups);
   });
@@ -130,37 +88,16 @@ async function getBoardsByWorkspaceLevelCell(
     workspaceId: [workspaceId],
   };
 
-  const result =
-    await executeGraphQLQuery<getBoardsByWorkSpaceWithGroupsWithItemsWithCells>(
-      clientOptions,
-      requestOptions,
-      query,
-      variables
-    );
+  const result = await executeGraphQLQuery<getBoardsByWorkSpaceWithGroupsWithItemsWithCells>(clientOptions, requestOptions, query, variables);
   const boards = result.data.boards;
 
   return boards.map((board) => {
     const groups = board.groups.map((group) => {
       const items = group.items_page.items.map((item) => {
-        const cells: Cell[] = item.column_values.map(
-          (col) => new Cell(col.id, col.text, col.type, JSON.parse(col.value), col.column.title)
-        );
-        return new Item(
-          clientOptions,
-          item.id,
-          item.name,
-          group.id,
-          Number(board.id),
-          cells
-        );
+        const cells: Cell[] = item.column_values.map((col) => new Cell(col.id, col.text, col.type, JSON.parse(col.value), col.column.title));
+        return new Item(clientOptions, item.id, item.name, group.id, Number(board.id), cells);
       });
-      return new Group(
-        clientOptions,
-        group.id,
-        group.title,
-        Number(board.id),
-        items
-      );
+      return new Group(clientOptions, group.id, group.title, Number(board.id), items);
     });
     return new Board(clientOptions, Number(board.id), board.name, groups);
   });
@@ -176,9 +113,7 @@ export async function getBoardsByWorkspace(
     case QueryLevel.Item:
     case QueryLevel.Cell:
       if (__DEV__) {
-        console.warn(
-          `NOTE: Deep query level might cause performance and wasteful queries to Monday. Use with precaution.`
-        );
+        console.warn(`NOTE: Deep query level might cause performance and wasteful queries to Monday. Use with precaution.`);
       }
       break;
     default:
@@ -187,33 +122,14 @@ export async function getBoardsByWorkspace(
 
   switch (queryLevel) {
     case QueryLevel.Board:
-      return await getBoardsByWorkspaceLevelBoard(
-        clientOptions,
-        workspaceId,
-        requestOptions
-      );
+      return await getBoardsByWorkspaceLevelBoard(clientOptions, workspaceId, requestOptions);
     case QueryLevel.Group:
-      return await getBoardsByWorkspaceLevelGroup(
-        clientOptions,
-        workspaceId,
-        requestOptions
-      );
+      return await getBoardsByWorkspaceLevelGroup(clientOptions, workspaceId, requestOptions);
     case QueryLevel.Item:
-      return await getBoardsByWorkspaceLevelItem(
-        clientOptions,
-        workspaceId,
-        requestOptions
-      );
+      return await getBoardsByWorkspaceLevelItem(clientOptions, workspaceId, requestOptions);
     case QueryLevel.Cell:
-      return await getBoardsByWorkspaceLevelCell(
-        clientOptions,
-        workspaceId,
-        requestOptions
-      );
+      return await getBoardsByWorkspaceLevelCell(clientOptions, workspaceId, requestOptions);
     default:
-      throw new MonstaError(
-        "query",
-        `Query level chosen: ${queryLevel} is unknown.`
-      );
+      throw new MonstaaError("query", `Query level chosen: ${queryLevel} is unknown.`);
   }
 }
