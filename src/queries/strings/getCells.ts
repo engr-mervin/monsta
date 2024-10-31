@@ -1,5 +1,5 @@
 export const GET_CELLS_BY_ITEM_LEVEL_CELL = `
-    query($itemId: [String!] $cellId: [String!]){
+    query($itemId: [ID!] $cellId: [String!]){
         items (ids: $itemId) {
             id
             name
@@ -16,7 +16,7 @@ export const GET_CELLS_BY_ITEM_LEVEL_CELL = `
     }`;
 
 export const GET_CELLS_BY_ITEM_LEVEL_CELL_ALL = `
-    query($itemId: [String!]){
+    query($itemId: [ID!]){
         items (ids: $itemId) {
             id
             name
