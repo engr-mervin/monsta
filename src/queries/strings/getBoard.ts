@@ -1,18 +1,28 @@
-export const GET_GROUPS_BY_BOARD_LEVEL_GROUP = `
+export const GET_BOARD_LEVEL_BOARD = `
     query($boardId: [ID!]){
       boards(ids: $boardId) {
         id
-        groups {
-          id
-          title
-        }
+        name
       }
     }`;
 
-export const GET_GROUPS_BY_BOARD_LEVEL_ITEM = `
+export const GET_BOARD_LEVEL_GROUP = `
+query($boardId: [ID!]){
+  boards(ids: $boardId) {
+    id
+    name
+    groups {
+      id
+      title
+    }
+  }
+}`;
+
+export const GET_BOARD_LEVEL_ITEM = `
     query($boardId: [ID!]){
       boards(ids: $boardId) {
         id
+        name
         groups {
             id
             title
@@ -26,10 +36,11 @@ export const GET_GROUPS_BY_BOARD_LEVEL_ITEM = `
       }
     }`;
 
-export const GET_GROUPS_BY_BOARD_LEVEL_CELL = `
+export const GET_BOARD_LEVEL_CELL = `
     query($boardId: [ID!], $cellId: [String!]){
       boards(ids: $boardId) {
         id
+        name
         groups {
                 id
                 title
@@ -52,10 +63,11 @@ export const GET_GROUPS_BY_BOARD_LEVEL_CELL = `
       }
     }`;
 
-export const GET_GROUPS_BY_BOARD_LEVEL_CELL_ALL = `
+export const GET_BOARD_LEVEL_CELL_ALL = `
 query($boardId: [ID!]){
       boards(ids: $boardId) {
         id
+        name
         groups {
                 id
                 title

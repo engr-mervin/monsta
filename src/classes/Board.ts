@@ -1,18 +1,53 @@
-import { ClientOptions } from "../types/types";
+import { getBoard } from "../queries/methods/getBoard";
+import { ClientOptions, QueryRequestOptions } from "../types/types";
 import { Group } from "./Group";
+import { Item } from "./Item";
 
 export class Board {
-  private readonly clientOptions: ClientOptions;
-  public readonly id: number;
-  public readonly name: string;
-  public readonly groups: Group[] | undefined;
+  private readonly _clientOptions: ClientOptions;
+  private _boardId: number;
+  private _name: string;
+  private _groups?: Group[];
+  private _items?: Item[];
 
-  constructor(_clientOptions: ClientOptions, _id: number, _name: string, _groups?: Group[]) {
-    this.clientOptions = _clientOptions;
-    this.id = _id;
-    this.name = _name;
-    if(_groups){
-        this.groups = _groups;
-    }
+  constructor(
+    _clientOptions: ClientOptions,
+    _boardId: number,
+    _name: string,
+    _groups?: Group[],
+    _items?: Item[]
+  ) {
+    this._clientOptions = _clientOptions;
+    this._boardId = _boardId;
+    this._name = _name;
+    this._groups = _groups;
+    this._items = _items;
+  }
+
+  public get boardId() {
+    return this._boardId;
+  }
+
+  public get name() {
+    return this._name;
+  }
+
+  public get groups() {
+    return this._groups;
+  }
+  public get items() {
+    return this._items;
+  }
+
+  public async update(requestOptions: QueryRequestOptions) {
+    const updatedBoard = await getBoard(
+      this._clientOptions,
+      this._boardId,
+      requestOptions
+    );
+    this._name = updatedBoard.name;
+    this._groups = updatedBoard.groups;
+    this._items = updatedBoard.items;
+    return this;
   }
 }

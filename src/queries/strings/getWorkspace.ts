@@ -1,13 +1,29 @@
-export const GET_BOARDS_BY_WORKSPACE_LEVEL_BOARD = `
+export const GET_WORKSPACE_LEVEL_WORKSPACE = `
     query($workspaceId: [ID!]){
-      boards(workspace_ids: $workspaceId) {
+      workspaces(ids: $workspaceId){
         id
         name
       }
     }`;
 
-export const GET_BOARDS_BY_WORKSPACE_LEVEL_GROUP = `
+export const GET_WORKSPACE_LEVEL_BOARD = `
+  query($workspaceId: [ID!]){
+    workspaces(ids: $workspaceId){
+      id
+      name
+    }
+    boards(workspace_ids: $workspaceId) {
+      id
+      name
+    }
+  }`;
+
+export const GET_WORKSPACE_LEVEL_GROUP = `
     query($workspaceId: [ID!]){
+      workspaces(ids: $workspaceId){
+        id
+        name
+      }
       boards(workspace_ids: $workspaceId) {
         id
         name
@@ -24,8 +40,12 @@ export const GET_BOARDS_BY_WORKSPACE_LEVEL_GROUP = `
       }
     }`;
 
-export const GET_BOARDS_BY_WORKSPACE_LEVEL_ITEM = `
+export const GET_WORKSPACE_LEVEL_ITEM = `
     query($workspaceId: [ID!]){
+      workspaces(ids: $workspaceId){
+        id
+        name
+      }
       boards(workspace_ids: $workspaceId) {
         id
         name
@@ -43,8 +63,12 @@ export const GET_BOARDS_BY_WORKSPACE_LEVEL_ITEM = `
       }
     }`;
 
-export const GET_BOARDS_BY_WORKSPACE_LEVEL_CELL = `
+export const GET_WORKSPACE_LEVEL_CELL = `
     query($workspaceId: [ID!]){
+      workspaces(ids: $workspaceId){
+        id
+        name
+      }
       boards(workspace_ids: $workspaceId) {
         id
         name

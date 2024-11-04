@@ -1,26 +1,19 @@
 //GROUP
-interface MGroup {
-  id: string;
-  title: string;
-}
-
-interface MGroupWithItems {
+export interface BaseGroup<I = undefined> {
   id: string;
   title: string;
   items_page: {
-    items: MItem[];
+    items: I;
   };
 }
 
-interface MGroupWithItemsWithCells {
+//WORKSPACE
+export interface BaseWorkspace {
   id: string;
-  title: string;
-  items_page: {
-    items: MItemWithCells[];
-  };
+  name: string;
 }
 
-export interface MCell {
+export interface BaseCell {
   column: {
     title: string;
   };
@@ -31,57 +24,31 @@ export interface MCell {
 }
 
 //ITEM
-export interface MItem {
+export interface BaseItem<C = undefined> {
   id: string;
   name: string;
+  column_values: C;
 }
-
-export interface MItemWithCells {
+export interface ItemWithParentIDs<C = undefined> {
   id: string;
+  board: {
+    id: string;
+  };
+  group: {
+    id: string;
+  };
   name: string;
-  column_values: MCell[];
+  column_values: C;
 }
 
 //BOARD
-export interface MBoard {
-  boards: [
-    { 
-      id: string; 
-      name: string 
-    }
-  ];
-}
-export interface MBoardWithGroups {
-  boards: [
-    {
-      id: string;
-      name: string;
-      groups: MGroup[];
-    }
-  ];
+export interface BaseBoard<G = undefined> {
+  id: string;
+  name: string;
+  groups: G;
 }
 
-export interface MBoardWithGroupsWithItems {
-  boards: [
-    {
-      id: string;
-      name: string;
-      groups: MGroupWithItems[];
-    }
-  ];
-}
-
-export interface MBoardWithGroupsWithItemsWithCells {
-  boards: [
-    {
-      id: string;
-      name: string;
-      groups: MGroupWithItemsWithCells[];
-    }
-  ];
-}
-
-export type BaseResponse<T> = {
-  data: T;
+export type BaseResponse<D> = {
+  data: D;
   account_id: number;
 };

@@ -1,4 +1,4 @@
-import { getCellsByItem } from "../queries/methods/getCells";
+import { getCellsByItem } from "../queries/methods/getItem";
 import { __DEV__ } from "../setup";
 import { ClientOptions } from "../types/types";
 import { Cell } from "./Cell";

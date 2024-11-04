@@ -1,8 +1,28 @@
-export const GET_CELLS_BY_ITEM_LEVEL_CELL = `
+export const GET_ITEM_LEVEL_ITEM = `
     query($itemId: [ID!] $cellId: [String!]){
         items (ids: $itemId) {
             id
             name
+            group {
+                id
+            }
+            board {
+                id
+            }
+        }
+    }`;
+
+export const GET_ITEM_LEVEL_CELL = `
+    query($itemId: [ID!] $cellId: [String!]){
+        items (ids: $itemId) {
+            id
+            name
+            group {
+                id
+            }
+            board {
+                id
+            }
             column_values(ids: $cellId) {
                 column {
                     title
@@ -15,11 +35,17 @@ export const GET_CELLS_BY_ITEM_LEVEL_CELL = `
         }
     }`;
 
-export const GET_CELLS_BY_ITEM_LEVEL_CELL_ALL = `
+export const GET_ITEM_LEVEL_CELL_ALL = `
     query($itemId: [ID!]){
         items (ids: $itemId) {
             id
             name
+            group {
+                id
+            }
+            board {
+                id
+            }
             column_values {
                 column {
                     title
