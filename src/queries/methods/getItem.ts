@@ -9,7 +9,7 @@ import {
   QueryRequestOptions,
   QueryLevel,
   Item_CellQuery,
-  QueryNotCellRequestOptions,
+  QueryItemRequestOptions,
 } from "../../types/types";
 import {
   GET_ITEM_LEVEL_CELL,
@@ -24,7 +24,7 @@ import {
 async function getItemLevelItem(
   clientOptions: ClientOptions,
   item: Item_CellQuery,
-  requestOptions: QueryNotCellRequestOptions
+  requestOptions: QueryItemRequestOptions
 ): Promise<Item> {
   const query = GET_ITEM_LEVEL_ITEM;
 

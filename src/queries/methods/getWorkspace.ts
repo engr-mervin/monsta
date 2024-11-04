@@ -8,10 +8,13 @@ import { executeGraphQLQuery } from "../../services/mondayService";
 import { __DEV__ } from "../../setup";
 import {
   ClientOptions,
+  QueryBoardRequestOptions,
   QueryCellRequestOptions,
+  QueryGroupRequestOptions,
+  QueryItemRequestOptions,
   QueryLevel,
-  QueryNotCellRequestOptions,
   QueryRequestOptions,
+  QueryWorkspaceRequestOptions,
 } from "../../types/types";
 import {
   GET_WORKSPACE_LEVEL_BOARD,
@@ -30,7 +33,7 @@ import {
 async function getWorkspaceLevelWorkspace(
   clientOptions: ClientOptions,
   workspaceId: string | number,
-  requestOptions: QueryNotCellRequestOptions
+  requestOptions: QueryWorkspaceRequestOptions
 ): Promise<Workspace> {
   const query = GET_WORKSPACE_LEVEL_BOARD;
 
@@ -53,7 +56,7 @@ async function getWorkspaceLevelWorkspace(
 async function getWorkspaceLevelBoard(
   clientOptions: ClientOptions,
   workspaceId: string | number,
-  requestOptions: QueryNotCellRequestOptions
+  requestOptions: QueryBoardRequestOptions
 ): Promise<Workspace> {
   const query = GET_WORKSPACE_LEVEL_BOARD;
 
@@ -85,7 +88,7 @@ async function getWorkspaceLevelBoard(
 async function getWorkspaceLevelGroup(
   clientOptions: ClientOptions,
   workspaceId: string | number,
-  requestOptions: QueryNotCellRequestOptions
+  requestOptions: QueryGroupRequestOptions
 ): Promise<Workspace> {
   const query = GET_WORKSPACE_LEVEL_GROUP;
 
@@ -120,7 +123,7 @@ async function getWorkspaceLevelGroup(
 async function getWorkspaceLevelItem(
   clientOptions: ClientOptions,
   workspaceId: string | number,
-  requestOptions: QueryNotCellRequestOptions
+  requestOptions: QueryItemRequestOptions
 ): Promise<Workspace> {
   const query = GET_WORKSPACE_LEVEL_ITEM;
 

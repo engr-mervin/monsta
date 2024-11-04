@@ -24,13 +24,28 @@ export interface RequestOptions extends MondayCommonOptions {
   noHooks?: boolean;
 }
 
-export type QueryRequestOptions = QueryCellRequestOptions | QueryNotCellRequestOptions;
+export type QueryRequestOptions = QueryWorkspaceRequestOptions | QueryBoardRequestOptions | QueryGroupRequestOptions | QueryItemRequestOptions | QueryCellRequestOptions;
+
+export interface QueryWorkspaceRequestOptions extends RequestOptions {
+  queryLevel: QueryLevel.Workspace;
+}
+export interface QueryBoardRequestOptions extends RequestOptions {
+  queryLevel: QueryLevel.Board;
+}
+export interface QueryGroupRequestOptions extends RequestOptions {
+  queryLevel: QueryLevel.Group;
+}
+export interface QueryItemRequestOptions extends RequestOptions {
+  queryLevel: QueryLevel.Item;
+  includeSubitems?: boolean;
+  subitemLevel?: QueryLevel;
+}
 export interface QueryCellRequestOptions extends RequestOptions {
   queryLevel: QueryLevel.Cell;
   columns?: string[];
-}
-export interface QueryNotCellRequestOptions extends RequestOptions {
-  queryLevel: QueryLevel.Workspace | QueryLevel.Group | QueryLevel.Item | QueryLevel.Board;
+  includeSubitems?: boolean;
+  subitemLevel?: QueryLevel;
+  subitemColumns?: string[];
 }
 
 interface MondayCommonOptions {

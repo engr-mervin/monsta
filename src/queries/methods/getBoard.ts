@@ -20,8 +20,10 @@ import {
   ClientOptions,
   QueryRequestOptions,
   QueryLevel,
-  QueryNotCellRequestOptions,
   QueryCellRequestOptions,
+  QueryBoardRequestOptions,
+  QueryGroupRequestOptions,
+  QueryItemRequestOptions,
 } from "../../types/types";
 import { __DEV__ } from "../../setup";
 import { Board } from "../../classes/Board";
@@ -29,7 +31,7 @@ import { Board } from "../../classes/Board";
 async function getBoardLevelBoard(
   clientOptions: ClientOptions,
   boardId: string | number,
-  requestOptions: QueryNotCellRequestOptions
+  requestOptions: QueryBoardRequestOptions
 ): Promise<Board> {
   const query = GET_BOARD_LEVEL_BOARD;
 
@@ -59,7 +61,7 @@ async function getBoardLevelBoard(
 async function getBoardLevelGroup(
   clientOptions: ClientOptions,
   boardId: string | number,
-  requestOptions: QueryNotCellRequestOptions
+  requestOptions: QueryGroupRequestOptions
 ): Promise<Board> {
   const query = GET_BOARD_LEVEL_GROUP;
 
@@ -93,7 +95,7 @@ async function getBoardLevelGroup(
 async function getBoardLevelItem(
   clientOptions: ClientOptions,
   boardId: string | number,
-  requestOptions: QueryNotCellRequestOptions
+  requestOptions: QueryItemRequestOptions
 ): Promise<Board> {
   const query = GET_BOARD_LEVEL_ITEM;
 

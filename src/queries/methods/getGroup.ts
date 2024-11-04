@@ -12,9 +12,10 @@ import {
   Group_RowQuery,
   ClientOptions,
   QueryCellRequestOptions,
-  QueryNotCellRequestOptions,
   QueryRequestOptions,
   QueryLevel,
+  QueryItemRequestOptions,
+  QueryGroupRequestOptions,
 } from "../../types/types";
 import { Group } from "../../classes/Group";
 import {
@@ -26,7 +27,7 @@ import {
 async function getGroupLevelGroup(
   clientOptions: ClientOptions,
   group: Group_RowQuery,
-  requestOptions: QueryNotCellRequestOptions
+  requestOptions: QueryGroupRequestOptions
 ): Promise<Group> {
   const query = GET_GROUP_LEVEL_GROUP;
 
@@ -67,7 +68,7 @@ async function getGroupLevelGroup(
 async function getGroupLevelItem(
   clientOptions: ClientOptions,
   group: Group_RowQuery,
-  requestOptions: QueryNotCellRequestOptions
+  requestOptions: QueryItemRequestOptions
 ): Promise<Group> {
   const query = GET_GROUP_LEVEL_ITEM;
 

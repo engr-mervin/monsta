@@ -1,7 +1,6 @@
 import { getItem } from "../queries/methods/getItem";
 import { ClientOptions, QueryRequestOptions } from "../types/types";
 import { Cell } from "./Cell";
-import { Subitem } from "./Subitem";
 
 export class Item {
   private readonly _clientOptions: ClientOptions;
@@ -11,7 +10,7 @@ export class Item {
   private _boardId: number;
   private _cellMapping: Record<string, Cell> | undefined = undefined;
   private _cells?: Cell[];
-  private _subitems?: Subitem[];
+  private _subitems?: Item[];
 
   constructor(
     _clientOptions: ClientOptions,
@@ -19,7 +18,8 @@ export class Item {
     _name: string,
     _groupId: string,
     _boardId: number,
-    _cells?: Cell[]
+    _cells?: Cell[],
+    _subitems?: Item[],
   ) {
     this._clientOptions = _clientOptions;
     this._itemId = _itemId;
@@ -27,7 +27,12 @@ export class Item {
     this._groupId = _groupId;
     this._boardId = _boardId;
     this._cells = _cells;
+    this._subitems = _subitems;
     this.buildMapping();
+  }
+
+  public isSubitem(){
+    return this._groupId === 'topics';
   }
 
   public get itemId() {
