@@ -306,7 +306,7 @@ query($itemId: [ID!], $cellId: [String!]){
             }
             id
             name
-            column_values(ids: $subitemCellId) {
+            column_values {
                 column {
                     title
                 }
@@ -348,7 +348,7 @@ query($itemId: [ID!]){
             }
             id
             name
-            column_values(ids: $subitemCellId) {
+            column_values {
                 column {
                     title
                 }
