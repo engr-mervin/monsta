@@ -32,20 +32,20 @@ export class MondayClient {
 
   public async getBoard(
     boardId: string | number,
-    requestOptions: QueryRequestOptions = { queryLevel: QueryLevel.Group }
+    requestOptions: QueryRequestOptions = { queryLevel: QueryLevel.Board }
   ) {
     return await getBoard(this.clientOptions, boardId, requestOptions);
   }
   public async getGroup(
     group: Group_RowQuery,
-    requestOptions: QueryRequestOptions = { queryLevel: QueryLevel.Item }
+    requestOptions: QueryRequestOptions = { queryLevel: QueryLevel.Group }
   ) {
     return await getGroup(this.clientOptions, group, requestOptions);
   }
 
   public async getItem(
     item: Item_CellQuery,
-    requestOptions: QueryRequestOptions = { queryLevel: QueryLevel.Cell }
+    requestOptions: QueryRequestOptions = { queryLevel: QueryLevel.Item, subitemLevel: "none" }
   ) {
     return await getItem(this.clientOptions, item, requestOptions);
   }

@@ -29,6 +29,13 @@ export interface BaseItem<C = undefined> {
   name: string;
   column_values: C;
 }
+
+export interface BaseItemWithSubitem<C = undefined, D = undefined> {
+  subitems: D;
+  id: string;
+  name: string;
+  column_values: C;
+}
 export interface ItemWithParentIDs<C = undefined> {
   id: string;
   board: {
@@ -40,6 +47,20 @@ export interface ItemWithParentIDs<C = undefined> {
   name: string;
   column_values: C;
 }
+
+export interface ItemWithSubitemsAndParentIDs<C = undefined, D = undefined> {
+  id: string;
+  board: {
+    id: string;
+  };
+  group: {
+    id: string;
+  };
+  name: string;
+  column_values: C;
+  subitems: D;
+}
+
 
 //BOARD
 export interface BaseBoard<G = undefined> {

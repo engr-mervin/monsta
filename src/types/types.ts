@@ -24,7 +24,12 @@ export interface RequestOptions extends MondayCommonOptions {
   noHooks?: boolean;
 }
 
-export type QueryRequestOptions = QueryWorkspaceRequestOptions | QueryBoardRequestOptions | QueryGroupRequestOptions | QueryItemRequestOptions | QueryCellRequestOptions;
+export type QueryRequestOptions =
+  | QueryWorkspaceRequestOptions
+  | QueryBoardRequestOptions
+  | QueryGroupRequestOptions
+  | QueryItemRequestOptions
+  | QueryCellRequestOptions;
 
 export interface QueryWorkspaceRequestOptions extends RequestOptions {
   queryLevel: QueryLevel.Workspace;
@@ -35,17 +40,47 @@ export interface QueryBoardRequestOptions extends RequestOptions {
 export interface QueryGroupRequestOptions extends RequestOptions {
   queryLevel: QueryLevel.Group;
 }
-export interface QueryItemRequestOptions extends RequestOptions {
+export type QueryItemRequestOptions =
+  | QueryItemSubitemItemRequestOptions
+  | QueryItemSubitemCellRequestOptions
+  | QueryItemNoSubitemRequestOptions;
+export interface QueryItemSubitemItemRequestOptions extends RequestOptions {
   queryLevel: QueryLevel.Item;
-  includeSubitems?: boolean;
-  subitemLevel?: QueryLevel;
+  subitemLevel: QueryLevel.Item;
 }
-export interface QueryCellRequestOptions extends RequestOptions {
+
+export interface QueryItemSubitemCellRequestOptions extends RequestOptions {
+  queryLevel: QueryLevel.Item;
+  subitemLevel: QueryLevel.Cell;
+  subitemColumns?: string[];
+}
+
+export interface QueryItemNoSubitemRequestOptions extends RequestOptions {
+  queryLevel: QueryLevel.Item;
+  subitemLevel: "none";
+}
+
+export type QueryCellRequestOptions =
+  | QueryCellSubitemItemRequestOptions
+  | QueryCellSubitemCellRequestOptions
+  | QueryCellNoSubitemRequestOptions;
+export interface QueryCellSubitemItemRequestOptions extends RequestOptions {
   queryLevel: QueryLevel.Cell;
   columns?: string[];
-  includeSubitems?: boolean;
-  subitemLevel?: QueryLevel;
+  subitemLevel: QueryLevel.Item;
+}
+
+export interface QueryCellSubitemCellRequestOptions extends RequestOptions {
+  queryLevel: QueryLevel.Cell;
+  columns?: string[];
+  subitemLevel: QueryLevel.Cell;
   subitemColumns?: string[];
+}
+
+export interface QueryCellNoSubitemRequestOptions extends RequestOptions {
+  queryLevel: QueryLevel.Cell;
+  columns?: string[];
+  subitemLevel: "none";
 }
 
 interface MondayCommonOptions {
@@ -60,7 +95,6 @@ export interface RowGroup {
   boardId: number;
 }
 
-
 export interface Group_RowQuery {
   groupId: string;
   boardId: number | string;
@@ -69,7 +103,6 @@ export interface Group_RowQuery {
 export interface Item_CellQuery {
   itemId: number | string;
 }
-
 
 export interface Item_SubitemQuery {
   itemId: number | string;
