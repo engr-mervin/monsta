@@ -1,6 +1,6 @@
 {
   "name": "monstaa",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "main": "dist/setup.js",
   "types": "dist/setup.d.ts",
   "scripts": {
