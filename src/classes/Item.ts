@@ -47,10 +47,10 @@ export class Item {
   public get boardId() {
     return this._boardId;
   }
-  public get cells() {
+  public get rawCells() {
     return this._rawCells;
   }
-  public get cellMapping() {
+  public get cells() {
     return this._cells;
   }
   public get subitems() {
