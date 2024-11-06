@@ -8,8 +8,8 @@ export class Item {
   private _name: string;
   private _groupId: string;
   private _boardId: number;
-  private _cellMapping: Record<string, Cell> | undefined = undefined;
-  private _cells?: Cell[];
+  private _cells: Record<string, Cell> | undefined = undefined;
+  private _rawCells?: Cell[];
   private _subitems?: Item[];
 
   constructor(
@@ -18,7 +18,7 @@ export class Item {
     _name: string,
     _groupId: string,
     _boardId: number,
-    _cells?: Cell[],
+    _rawCells?: Cell[],
     _subitems?: Item[],
   ) {
     this._clientOptions = _clientOptions;
@@ -26,7 +26,7 @@ export class Item {
     this._name = _name;
     this._groupId = _groupId;
     this._boardId = _boardId;
-    this._cells = _cells;
+    this._rawCells = _rawCells;
     this._subitems = _subitems;
     this.buildMapping();
   }
@@ -48,19 +48,19 @@ export class Item {
     return this._boardId;
   }
   public get cells() {
-    return this._cells;
+    return this._rawCells;
   }
   public get cellMapping() {
-    return this._cellMapping;
+    return this._cells;
   }
   public get subitems() {
     return this._subitems;
   }
 
   private buildMapping() {
-    if (this._cells) {
-      this._cellMapping = {};
-      this._cells.forEach((cell) => (this._cellMapping![cell.columnId] = cell));
+    if (this._rawCells) {
+      this._cells = {};
+      this._rawCells.forEach((cell) => (this._cells![cell.columnId] = cell));
     }
   }
 
@@ -75,7 +75,7 @@ export class Item {
     this._name = updatedItem.name;
     this._groupId = updatedItem.groupId;
     this._boardId = updatedItem.boardId;
-    this._cells = updatedItem.cells;
+    this._rawCells = updatedItem.cells;
     this._subitems = updatedItem.subitems;
     this.buildMapping();
     return this;

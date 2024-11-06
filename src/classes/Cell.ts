@@ -1,9 +1,9 @@
 export class Cell {
-  public readonly columnId: string;
-  public readonly type: string;
-  public readonly text: string | null;
-  public readonly value: Record<string, unknown>;
-  public readonly title: string;
+  private _columnId: string;
+  private _type: string;
+  private _text: string | null;
+  private _value: Record<string, unknown>;
+  private _title: string;
 
   constructor(
     _columnId: string,
@@ -12,21 +12,28 @@ export class Cell {
     _value: Record<string, unknown>,
     _title: string,
   ) {
-    this.columnId = _columnId;
-    this.text = _text;
-    this.type = _type;
-    this.value = _value;
-    this.title = _title;
+    this._columnId = _columnId;
+    this._text = _text;
+    this._type = _type;
+    this._value = _value;
+    this._title = _title;
   }
 
+  public get title(){
+    return this._title;
+  }
+  
+  public get columnId(){
+    return this._columnId;
+  }
 
-  public getValue(): null | boolean | number | string {
-    if(this.type === 'checkbox'){
-      return Boolean(this.value.checked);
-    } else if (this.type === 'numbers') {
-      return Number(this.text);
+  public get value(): null | boolean | number | string {
+    if(this._type === 'checkbox'){
+      return Boolean(this._value.checked);
+    } else if (this._type === 'numbers') {
+      return Number(this._text);
     } else {
-      return this.text;
+      return this._text;
     }
   }
 }
