@@ -75,7 +75,7 @@ export class Item {
     this._name = updatedItem.name;
     this._groupId = updatedItem.groupId;
     this._boardId = updatedItem.boardId;
-    this._rawCells = updatedItem.cells;
+    this._rawCells = updatedItem.rawCells;
     this._subitems = updatedItem.subitems;
     this.buildMapping();
     return this;
