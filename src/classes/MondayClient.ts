@@ -11,10 +11,15 @@ import {
 } from "../types/types";
 
 export class MondayClient {
-  public readonly clientOptions: ClientOptions;
+  public readonly clientOptions!: ClientOptions;
 
   constructor(_clientOptions: ClientOptions) {
-    this.clientOptions = _clientOptions;
+    Object.defineProperty(this, "clientOptions", {
+      value: _clientOptions,
+      enumerable: false,
+      writable: true,
+      configurable: true,
+    });
   }
 
   /** Methods to progressively populate the board object */
@@ -23,11 +28,7 @@ export class MondayClient {
     workspaceId: string | number,
     requestOptions: QueryRequestOptions = { queryLevel: QueryLevel.Board }
   ) {
-    return await getWorkspace(
-      this.clientOptions,
-      workspaceId,
-      requestOptions
-    );
+    return await getWorkspace(this.clientOptions, workspaceId, requestOptions);
   }
 
   public async getBoard(
@@ -45,7 +46,10 @@ export class MondayClient {
 
   public async getItem(
     item: Item_CellQuery,
-    requestOptions: QueryRequestOptions = { queryLevel: QueryLevel.Item, subitemLevel: "none" }
+    requestOptions: QueryRequestOptions = {
+      queryLevel: QueryLevel.Item,
+      subitemLevel: "none",
+    }
   ) {
     return await getItem(this.clientOptions, item, requestOptions);
   }

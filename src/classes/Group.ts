@@ -7,7 +7,7 @@ export class Group {
   private _title: string;
   private _boardId: number;
   private _items?: Item[];
-  private readonly _clientOptions: ClientOptions;
+  private readonly _clientOptions!: ClientOptions;
 
   constructor(
     _clientOptions: ClientOptions,
@@ -16,31 +16,40 @@ export class Group {
     _boardId: number,
     _items?: Item[]
   ) {
-    this._clientOptions = _clientOptions;
+    Object.defineProperty(this, "_clientOptions", {
+      value: _clientOptions,
+      enumerable: false,
+      writable: true,
+      configurable: true,
+    });
     this._groupId = _groupId;
     this._title = _title;
     this._boardId = _boardId;
     this._items = _items;
   }
 
-  public get groupId(){
+  public get groupId() {
     return this._groupId;
   }
 
-  public get title(){
+  public get title() {
     return this._title;
   }
 
-  public get boardId(){
+  public get boardId() {
     return this._boardId;
   }
 
-  public get items(){
+  public get items() {
     return this._items;
   }
 
   public async update(requestOptions: QueryRequestOptions) {
-    const updatedGroup = await getGroup(this._clientOptions, this, requestOptions);
+    const updatedGroup = await getGroup(
+      this._clientOptions,
+      this,
+      requestOptions
+    );
     this._title = updatedGroup.title;
     this._items = updatedGroup.items;
     return this;

@@ -3,7 +3,7 @@ import { ClientOptions, QueryRequestOptions } from "../types/types";
 import { Cell } from "./Cell";
 
 export class Item {
-  private readonly _clientOptions: ClientOptions;
+  private readonly _clientOptions!: ClientOptions;
   private _itemId: number;
   private _name: string;
   private _groupId: string;
@@ -19,9 +19,14 @@ export class Item {
     _groupId: string,
     _boardId: number,
     _rawCells?: Cell[],
-    _subitems?: Item[],
+    _subitems?: Item[]
   ) {
-    this._clientOptions = _clientOptions;
+    Object.defineProperty(this, "_clientOptions", {
+      value: _clientOptions,
+      enumerable: false,
+      writable: true,
+      configurable: true,
+    });
     this._itemId = _itemId;
     this._name = _name;
     this._groupId = _groupId;
@@ -31,8 +36,8 @@ export class Item {
     this.buildMapping();
   }
 
-  public isSubitem(){
-    return this._groupId === 'topics';
+  public isSubitem() {
+    return this._groupId === "topics";
   }
 
   public get itemId() {

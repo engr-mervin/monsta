@@ -3,7 +3,7 @@ import { ClientOptions, QueryRequestOptions } from "../types/types";
 import { Board } from "./Board";
 
 export class Workspace {
-  private readonly _clientOptions: ClientOptions;
+  private readonly _clientOptions!: ClientOptions;
   private _workspaceId: number;
   private _name: string;
   private _boards?: Board[];
@@ -14,7 +14,12 @@ export class Workspace {
     _name: string,
     _boards?: Board[]
   ) {
-    this._clientOptions = _clientOptions;
+    Object.defineProperty(this, "_clientOptions", {
+      value: _clientOptions,
+      enumerable: false,
+      writable: true,
+      configurable: true,
+    });
     this._workspaceId = _workspaceId;
     this._name = _name;
     this._boards = _boards;

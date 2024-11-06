@@ -4,7 +4,7 @@ import { Group } from "./Group";
 import { Item } from "./Item";
 
 export class Board {
-  private readonly _clientOptions: ClientOptions;
+  private readonly _clientOptions!: ClientOptions;
   private _boardId: number;
   private _name: string;
   private _groups?: Group[];
@@ -17,7 +17,12 @@ export class Board {
     _groups?: Group[],
     _items?: Item[]
   ) {
-    this._clientOptions = _clientOptions;
+    Object.defineProperty(this, "_clientOptions", {
+      value: _clientOptions,
+      enumerable: false,
+      writable: true,
+      configurable: true,
+    });
     this._boardId = _boardId;
     this._name = _name;
     this._groups = _groups;
