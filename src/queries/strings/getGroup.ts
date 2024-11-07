@@ -366,15 +366,6 @@ query($boardId: [ID!], $groupId: [String!]){
                         }
                         id
                         name
-                        column_values{
-                            column {
-                                title
-                            }
-                            id
-                            value
-                            text
-                            type
-                        }
                     }
                     id
                     name

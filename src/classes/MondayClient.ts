@@ -1,6 +1,7 @@
 import { getBoard } from "../queries/methods/getBoard";
 import { getGroup } from "../queries/methods/getGroup";
 import { getItem } from "../queries/methods/getItem";
+import { getItems } from "../queries/methods/getItems";
 import { getWorkspace } from "../queries/methods/getWorkspace";
 import {
   Group_RowQuery,
@@ -8,6 +9,7 @@ import {
   QueryRequestOptions,
   QueryLevel,
   Item_CellQuery,
+  Items_CellQuery,
 } from "../types/types";
 
 export class MondayClient {
@@ -52,6 +54,16 @@ export class MondayClient {
     }
   ) {
     return await getItem(this.clientOptions, item, requestOptions);
+  }
+
+  public async getItems(
+    items: Items_CellQuery,
+    requestOptions: QueryRequestOptions = {
+      queryLevel: QueryLevel.Item,
+      subitemLevel: "none",
+    }
+  ) {
+    return await getItems(this.clientOptions, items, requestOptions);
   }
 
   // public async getSubitemsByItem(

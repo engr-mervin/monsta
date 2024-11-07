@@ -43,6 +43,7 @@ import {
   GET_GROUP_LEVEL_ITEM_SUBITEM_ITEM_TYPE,
 } from "../types/getGroup";
 import { getItems } from "./getItems";
+import { __DEV__ } from "../../setup";
 
 async function getGroupLevelGroup(
   clientOptions: ClientOptions,
@@ -476,6 +477,11 @@ async function getGroupLevelCellSubitemCell(
   group: Group_RowQuery,
   requestOptions: QueryCellSubitemCellRequestOptions
 ): Promise<Group> {
+  if (__DEV__) {
+    console.log(
+      `Take note that the query getGroupLevelCellSubitemCell triggers 2 queries in Monday because of depth limitations.`
+    );
+  }
   const query = requestOptions.columns
     ? requestOptions.subitemColumns
       ? GET_GROUP_LEVEL_CELL_SUBITEM_CELL
@@ -530,7 +536,6 @@ async function getGroupLevelCellSubitemCell(
 
   const resultGroup = board.groups[0];
 
-  
   const allSubitemIds: number[] = [];
   resultGroup.items_page.items.forEach((item) =>
     item.subitems.forEach((subitem) => allSubitemIds.push(Number(subitem.id)))
