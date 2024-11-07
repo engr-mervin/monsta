@@ -541,17 +541,18 @@ async function getGroupLevelCellSubitemCell(
     item.subitems.forEach((subitem) => allSubitemIds.push(Number(subitem.id)))
   );
 
-  const subitemDetails = await getItems(
-    clientOptions,
-    { itemId: allSubitemIds },
-    { queryLevel: QueryLevel.Cell, subitemLevel: "none" }
-  );
-
+  let subitemDetails;
   const subitemMapping: Record<number, Cell[] | undefined> = {};
-
-  subitemDetails.forEach(
-    (subitem) => (subitemMapping[subitem.itemId] = subitem.rawCells)
-  );
+  if (allSubitemIds.length > 0) {
+    subitemDetails = await getItems(
+      clientOptions,
+      { itemId: allSubitemIds },
+      { queryLevel: QueryLevel.Cell, subitemLevel: "none" }
+    );
+    subitemDetails.forEach(
+      (subitem) => (subitemMapping[subitem.itemId] = subitem.rawCells)
+    );
+  }
 
   const items = resultGroup.items_page.items.map((item) => {
     const subitems: Item[] = item.subitems.map((subitem) => {
@@ -561,7 +562,7 @@ async function getGroupLevelCellSubitemCell(
         subitem.name,
         subitem.group.id,
         Number(subitem.board.id),
-        subitemMapping[Number(subitem.id)]
+        subitemMapping[Number(subitem.id)] || []
       );
     });
     const cells: Cell[] = item.column_values.map(
