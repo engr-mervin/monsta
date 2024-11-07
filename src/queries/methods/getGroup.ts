@@ -42,6 +42,7 @@ import {
   GET_GROUP_LEVEL_ITEM_SUBITEM_CELL_TYPE,
   GET_GROUP_LEVEL_ITEM_SUBITEM_ITEM_TYPE,
 } from "../types/getGroup";
+import { getItems } from "./getItems";
 
 async function getGroupLevelGroup(
   clientOptions: ClientOptions,
@@ -239,27 +240,37 @@ async function getGroupLevelItemSubitemCell(
   }
 
   const resultGroup = board.groups[0];
+
+  const allSubitemIds: number[] = [];
+  resultGroup.items_page.items.forEach((item) =>
+    item.subitems.forEach((subitem) => allSubitemIds.push(Number(subitem.id)))
+  );
+
+  const subitemDetails = await getItems(
+    clientOptions,
+    { itemId: allSubitemIds },
+    { queryLevel: QueryLevel.Cell, subitemLevel: "none" }
+  );
+
+  const subitemMapping: Record<number, Cell[] | undefined> = {};
+
+  subitemDetails.forEach(
+    (subitem) => (subitemMapping[subitem.itemId] = subitem.rawCells)
+  );
+
   const items = resultGroup.items_page.items.map((item) => {
     const subitems: Item[] = item.subitems.map((subitem) => {
-      const cells = subitem.column_values.map(
-        (col) =>
-          new Cell(
-            col.id,
-            col.text,
-            col.type,
-            JSON.parse(col.value),
-            col.column.title
-          )
-      );
+      allSubitemIds.push(Number(subitem.id));
       return new Item(
         clientOptions,
         Number(subitem.id),
         subitem.name,
         subitem.group.id,
         Number(subitem.group.id),
-        cells
+        subitemMapping[Number(subitem.id)]
       );
     });
+
     return new Item(
       clientOptions,
       Number(item.id),
@@ -518,25 +529,34 @@ async function getGroupLevelCellSubitemCell(
   }
 
   const resultGroup = board.groups[0];
+
+  
+  const allSubitemIds: number[] = [];
+  resultGroup.items_page.items.forEach((item) =>
+    item.subitems.forEach((subitem) => allSubitemIds.push(Number(subitem.id)))
+  );
+
+  const subitemDetails = await getItems(
+    clientOptions,
+    { itemId: allSubitemIds },
+    { queryLevel: QueryLevel.Cell, subitemLevel: "none" }
+  );
+
+  const subitemMapping: Record<number, Cell[] | undefined> = {};
+
+  subitemDetails.forEach(
+    (subitem) => (subitemMapping[subitem.itemId] = subitem.rawCells)
+  );
+
   const items = resultGroup.items_page.items.map((item) => {
     const subitems: Item[] = item.subitems.map((subitem) => {
-      const cells = subitem.column_values.map(
-        (col) =>
-          new Cell(
-            col.id,
-            col.text,
-            col.type,
-            JSON.parse(col.value),
-            col.column.title
-          )
-      );
       return new Item(
         clientOptions,
         Number(subitem.id),
         subitem.name,
         subitem.group.id,
         Number(subitem.board.id),
-        cells
+        subitemMapping[Number(subitem.id)]
       );
     });
     const cells: Cell[] = item.column_values.map(

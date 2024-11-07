@@ -73,21 +73,13 @@ export const GET_GROUP_LEVEL_ITEM_SUBITEM_CELL = `
                             }
                             id
                             name
-                            column_values(ids: $subitemCellId) {
-                                column {
-                                    title
-                                }
-                                id
-                                value
-                                text
-                                type
-                            }
                         }
                     }
                 }
             }
         }
     }`;
+
 export const GET_GROUP_LEVEL_ITEM_SUBITEM_CELL_ALL = `
     query($boardId: [ID!], $groupId: [String!]){
         boards(ids: $boardId) {
@@ -108,15 +100,6 @@ export const GET_GROUP_LEVEL_ITEM_SUBITEM_CELL_ALL = `
                             }
                             id
                             name
-                            column_values {
-                                column {
-                                    title
-                                }
-                                id
-                                value
-                                text
-                                type
-                            }
                         }
                     }
                 }
@@ -266,16 +249,7 @@ query($boardId: [ID!], $groupId: [String!], $cellId: [String!], $subitemCellId: 
                         }
                         id
                         name
-                        column_values(ids: $subitemCellId) {
-                            column {
-                                title
-                            }
-                            id
-                            value
-                            text
-                            type
-                        }
-                        }
+                    }
                     id
                     name
                     column_values(ids: $cellId) {
@@ -311,15 +285,6 @@ query($boardId: [ID!], $groupId: [String!], $subitemCellId: [String!]){
                         }
                         id
                         name
-                        column_values (ids: $subitemCellId){
-                            column {
-                                title
-                            }
-                            id
-                            value
-                            text
-                            type
-                        }
                     }
                     id
                     name
@@ -337,7 +302,6 @@ query($boardId: [ID!], $groupId: [String!], $subitemCellId: [String!]){
         }
     }
 }`;
-
 
 export const GET_GROUP_LEVEL_CELL_SUBITEM_CELL_ALL = `
 query($boardId: [ID!], $groupId: [String!], $cellId: [String!]){

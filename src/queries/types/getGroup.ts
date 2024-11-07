@@ -21,9 +21,7 @@ export type GET_GROUP_LEVEL_ITEM_SUBITEM_ITEM_TYPE = BaseResponse<{
 }>;
 export type GET_GROUP_LEVEL_ITEM_SUBITEM_CELL_TYPE = BaseResponse<{
   boards: BaseBoard<
-    BaseGroup<
-      BaseItemWithSubitem<undefined, ItemWithParentIDs<BaseCell[]>[]>[]
-    >[]
+    BaseGroup<BaseItemWithSubitem<undefined, ItemWithParentIDs[]>[]>[]
   >[];
 }>;
 export type GET_GROUP_LEVEL_CELL_NO_SUBITEM_TYPE = BaseResponse<{
@@ -37,6 +35,6 @@ export type GET_GROUP_LEVEL_CELL_SUBITEM_ITEM_TYPE = BaseResponse<{
 }>;
 export type GET_GROUP_LEVEL_CELL_SUBITEM_CELL_TYPE = BaseResponse<{
   boards: BaseBoard<
-    BaseGroup<BaseItemWithSubitem<BaseCell[], ItemWithParentIDs<BaseCell[]>[]>[]>[]
+    BaseGroup<BaseItemWithSubitem<BaseCell[], ItemWithParentIDs[]>[]>[]
   >[];
 }>;

@@ -104,6 +104,10 @@ export interface Item_CellQuery {
   itemId: number | string;
 }
 
+export interface Items_CellQuery {
+  itemId: (number | string)[];
+}
+
 export interface Item_SubitemQuery {
   itemId: number | string;
 }
