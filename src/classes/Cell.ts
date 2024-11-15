@@ -31,15 +31,27 @@ export class Cell {
     return this._value;
   }
 
-  public get value(): null | boolean | number | string | [string, string] {
+  public get text(){
+    return this._text;
+  }
+
+  public get type(){
+    return this._type;
+  }
+
+  public get value(): CellValue {
     if (this._type === "checkbox") {
       return Boolean(this._value.checked);
     } else if (this._type === "numbers") {
       return Number(this._text);
     } else if (this._type === "timeline") {
       return [this._value.from as string, this._value.to as string];
+    } else if (this._type === "dropdown") {
+      return this._text ? this._text.split(',') : null;
     } else {
       return this._text;
     }
   }
 }
+
+export type CellValue = null | boolean | number | string | [string, string] | string[]; 

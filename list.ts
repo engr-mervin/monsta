@@ -102,3 +102,13 @@
   apiCallToMonday,
   cleanHTMLforMonday
   */
+
+
+
+  /**!SECTION
+   * 
+   * Add getuser - ok
+   * Improve query building
+   * Improve types
+   * Add columns query to board + subitem board + subitem columns
+   */

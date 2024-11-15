@@ -61,7 +61,6 @@ export interface ItemWithSubitemsAndParentIDs<C = undefined, D = undefined> {
   subitems: D;
 }
 
-
 //BOARD
 export interface BaseBoard<G = undefined> {
   id: string;
@@ -72,4 +71,15 @@ export interface BaseBoard<G = undefined> {
 export type BaseResponse<D> = {
   data: D;
   account_id: number;
+};
+
+//USER
+export type BaseUser = {
+  email: string;
+  name: string;
+  id: string;
+  account: {
+    name: string;
+    id: string;
+  };
 };

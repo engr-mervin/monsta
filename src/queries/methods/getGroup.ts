@@ -256,7 +256,7 @@ async function getGroupLevelItemSubitemCell(
   const subitemMapping: Record<number, Cell[] | undefined> = {};
 
   subitemDetails.forEach(
-    (subitem) => (subitemMapping[subitem.itemId] = subitem.rawCells)
+    (subitem) => (subitemMapping[subitem.itemId] = subitem.cells)
   );
 
   const items = resultGroup.items_page.items.map((item) => {
@@ -550,7 +550,7 @@ async function getGroupLevelCellSubitemCell(
       { queryLevel: QueryLevel.Cell, subitemLevel: "none" }
     );
     subitemDetails.forEach(
-      (subitem) => (subitemMapping[subitem.itemId] = subitem.rawCells)
+      (subitem) => (subitemMapping[subitem.itemId] = subitem.cells)
     );
   }
 
