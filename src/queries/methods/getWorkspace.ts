@@ -659,7 +659,7 @@ export async function getWorkspace(
     case QueryLevel.Item:
     case QueryLevel.Cell:
       if (__DEV__) {
-        console.warn(
+        throw new MonstaaError('access', 
           `NOTE: Deep query level might cause performance and wasteful queries to Monday. Use with precaution.`
         );
       }

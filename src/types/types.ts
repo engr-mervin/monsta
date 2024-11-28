@@ -12,6 +12,11 @@ export enum SubitemQueryLevel {
   SubitemCell = "cell", //Full subitem + subitem cell values
 }
 
+interface MondayCommonOptions {
+  onStart?: () => void;
+  onSuccess?: <T>(result: T) => void;
+  onError?: (error: unknown) => void;
+}
 export interface ClientOptions extends MondayCommonOptions {
   name: string;
   apiToken: string;
@@ -31,11 +36,13 @@ export type QueryRequestOptions =
   | QueryItemRequestOptions
   | QueryCellRequestOptions;
 
+
 export interface QueryWorkspaceRequestOptions extends RequestOptions {
   queryLevel: QueryLevel.Workspace;
 }
 export interface QueryBoardRequestOptions extends RequestOptions {
   queryLevel: QueryLevel.Board;
+  includeColumns: boolean;
 }
 export interface QueryGroupRequestOptions extends RequestOptions {
   queryLevel: QueryLevel.Group;
@@ -83,11 +90,6 @@ export interface QueryCellNoSubitemRequestOptions extends RequestOptions {
   subitemLevel: "none";
 }
 
-interface MondayCommonOptions {
-  onStart?: () => void;
-  onSuccess?: <T>(result: T) => void;
-  onError?: (error: unknown) => void;
-}
 
 export interface RowGroup {
   id: string;

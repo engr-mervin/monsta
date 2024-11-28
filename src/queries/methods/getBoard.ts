@@ -666,13 +666,13 @@ async function getBoardLevelCell(
 export async function getBoard(
   clientOptions: ClientOptions,
   boardId: string | number,
-  requestOptions: QueryRequestOptions = { queryLevel: QueryLevel.Board }
+  requestOptions: QueryRequestOptions = { queryLevel: QueryLevel.Board, includeColumns: false }
 ): Promise<Board> {
   const queryLevel = requestOptions.queryLevel;
   switch (queryLevel) {
     case QueryLevel.Cell:
       if (__DEV__) {
-        console.warn(
+        throw new MonstaaError('access', 
           `NOTE: Deep query level might cause performance and wasteful queries to Monday. Use with precaution.`
         );
       }

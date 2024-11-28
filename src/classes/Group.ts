@@ -1,3 +1,4 @@
+import { MonstaaError } from "../error";
 import { getGroup } from "../queries/methods/getGroup";
 import { ClientOptions, QueryRequestOptions } from "../types/types";
 import { Item } from "./Item";
@@ -41,6 +42,9 @@ export class Group {
   }
 
   public get items() {
+    if (!this._items) {
+      throw new MonstaaError('access', `Items is uninitialized.`);
+    }
     return this._items;
   }
 

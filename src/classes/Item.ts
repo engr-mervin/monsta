@@ -1,3 +1,4 @@
+import { MonstaaError } from "../error";
 import { getItem } from "../queries/methods/getItem";
 import { ClientOptions, QueryRequestOptions } from "../types/types";
 import { Cell, CellValue } from "./Cell";
@@ -36,10 +37,6 @@ export class Item {
     this.buildMapping();
   }
 
-  public isSubitem() {
-    return this._groupId === "topics";
-  }
-
   public get itemId() {
     return this._itemId;
   }
@@ -53,12 +50,21 @@ export class Item {
     return this._boardId;
   }
   public get cells() {
+    if (!this._cells) {
+      throw new MonstaaError('access', `Cells is uninitialized.`);
+    }
     return this._cells;
   }
   public get values() {
+    if(!this._values) {
+      throw new MonstaaError('access', `Values is uninitialized.`);
+    }
     return this._values;
   }
   public get subitems() {
+    if (!this._subitems) {
+      throw new MonstaaError('access', `Subitems is uninitialized.`);
+    }
     return this._subitems;
   }
 
