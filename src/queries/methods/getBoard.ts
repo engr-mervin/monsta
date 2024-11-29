@@ -3,19 +3,7 @@ import { Group } from "../../classes/Group";
 import { Item } from "../../classes/Item";
 import { MonstaaError } from "../../error";
 import {
-  GET_BOARD_LEVEL_BOARD,
-  GET_BOARD_LEVEL_CELL_ALL_NO_SUBITEM,
-  GET_BOARD_LEVEL_CELL_ALL_SUBITEM_CELL,
-  GET_BOARD_LEVEL_CELL_ALL_SUBITEM_CELL_ALL,
-  GET_BOARD_LEVEL_CELL_ALL_SUBITEM_ITEM,
-  GET_BOARD_LEVEL_CELL_NO_SUBITEM,
-  GET_BOARD_LEVEL_CELL_SUBITEM_CELL,
-  GET_BOARD_LEVEL_CELL_SUBITEM_ITEM,
-  GET_BOARD_LEVEL_GROUP,
-  GET_BOARD_LEVEL_ITEM_NO_SUBITEM,
-  GET_BOARD_LEVEL_ITEM_SUBITEM_CELL,
-  GET_BOARD_LEVEL_ITEM_SUBITEM_CELL_ALL,
-  GET_BOARD_LEVEL_ITEM_SUBITEM_ITEM,
+  GET_BOARD,
 } from "../strings/getBoard";
 import { executeGraphQLQuery } from "../../services/mondayService";
 import {
@@ -49,12 +37,20 @@ import { Board } from "../../classes/Board";
 async function getBoardLevelBoard(
   clientOptions: ClientOptions,
   boardId: string | number,
-  requestOptions: QueryBoardRequestOptions
+  requestOptions: QueryBoardRequestOptions & { includeColumns: boolean }
 ): Promise<Board> {
-  const query = GET_BOARD_LEVEL_BOARD;
+  const query = GET_BOARD;
 
   const variables = {
     boardId: [boardId],
+    includeGroups: false, 
+    includeItems: false,
+    includeColumns: requestOptions.includeColumns, 
+    cellId: null, 
+    subitemCellId: null,
+    includeCells: false, 
+    includeSubitems: false,
+    includeSubitemCells: false
   };
 
   const result = await executeGraphQLQuery<GET_BOARD_LEVEL_BOARD_TYPE>(
@@ -79,12 +75,20 @@ async function getBoardLevelBoard(
 async function getBoardLevelGroup(
   clientOptions: ClientOptions,
   boardId: string | number,
-  requestOptions: QueryGroupRequestOptions
+  requestOptions: QueryGroupRequestOptions & { includeColumns: boolean }
 ): Promise<Board> {
-  const query = GET_BOARD_LEVEL_GROUP;
-
+  const query = GET_BOARD;
+  
   const variables = {
     boardId: [boardId],
+    includeGroups: true, 
+    includeItems: false,
+    includeColumns: requestOptions.includeColumns, 
+    cellId: null, 
+    subitemCellId: null,
+    includeCells: false, 
+    includeSubitems: false,
+    includeSubitemCells: false
   };
 
   const result = await executeGraphQLQuery<GET_BOARD_LEVEL_GROUP_TYPE>(
@@ -113,12 +117,20 @@ async function getBoardLevelGroup(
 async function getBoardLevelItemNoSubitem(
   clientOptions: ClientOptions,
   boardId: string | number,
-  requestOptions: QueryItemNoSubitemRequestOptions
+  requestOptions: QueryItemNoSubitemRequestOptions & { includeColumns: boolean }
 ): Promise<Board> {
-  const query = GET_BOARD_LEVEL_ITEM_NO_SUBITEM;
+  const query = GET_BOARD;
 
   const variables = {
     boardId: [boardId],
+    includeColumns: requestOptions.includeColumns, 
+    includeGroups: true, 
+    includeItems: true,
+    includeCells: false, 
+    cellId: null, 
+    subitemCellId: null,
+    includeSubitems: false,
+    includeSubitemCells: false
   };
 
   const result =
@@ -172,12 +184,20 @@ async function getBoardLevelItemNoSubitem(
 async function getBoardLevelItemSubitemItem(
   clientOptions: ClientOptions,
   boardId: string | number,
-  requestOptions: QueryItemSubitemItemRequestOptions
+  requestOptions: QueryItemSubitemItemRequestOptions & { includeColumns: boolean }
 ): Promise<Board> {
-  const query = GET_BOARD_LEVEL_ITEM_SUBITEM_ITEM;
-
+  const query = GET_BOARD;
+  
   const variables = {
     boardId: [boardId],
+    includeColumns: requestOptions.includeColumns, 
+    includeGroups: true, 
+    includeItems: true,
+    includeCells: false, 
+    cellId: null, 
+    subitemCellId: null,
+    includeSubitems: true,
+    includeSubitemCells: false
   };
 
   const result =
@@ -243,20 +263,21 @@ async function getBoardLevelItemSubitemItem(
 async function getBoardLevelItemSubitemCell(
   clientOptions: ClientOptions,
   boardId: string | number,
-  requestOptions: QueryItemSubitemCellRequestOptions
+  requestOptions: QueryItemSubitemCellRequestOptions & { includeColumns: boolean }
 ): Promise<Board> {
-  const query = requestOptions.subitemColumns
-    ? GET_BOARD_LEVEL_ITEM_SUBITEM_CELL
-    : GET_BOARD_LEVEL_ITEM_SUBITEM_CELL_ALL;
+  const query = GET_BOARD;
 
-  const variables = requestOptions.subitemColumns
-    ? {
-        boardId: [boardId],
-        subitemCellId: requestOptions.subitemColumns,
-      }
-    : {
-        boardId: [boardId],
-      };
+  const variables = {
+    boardId: [boardId],
+    includeColumns: requestOptions.includeColumns, 
+    includeGroups: true, 
+    includeItems: true,
+    includeCells: false, 
+    cellId: null, 
+    subitemCellId: null,
+    includeSubitems: true,
+    includeSubitemCells: true
+  };
 
   const result =
     await executeGraphQLQuery<GET_BOARD_LEVEL_ITEM_SUBITEM_CELL_TYPE>(
@@ -332,7 +353,7 @@ async function getBoardLevelItemSubitemCell(
 async function getBoardLevelItem(
   clientOptions: ClientOptions,
   boardId: string | number,
-  requestOptions: QueryItemRequestOptions
+  requestOptions: QueryItemRequestOptions & { includeColumns: boolean }
 ): Promise<Board> {
   switch (requestOptions.subitemLevel) {
     case "none":
@@ -359,20 +380,21 @@ async function getBoardLevelItem(
 async function getBoardLevelCellNoSubitem(
   clientOptions: ClientOptions,
   boardId: string | number,
-  requestOptions: QueryCellNoSubitemRequestOptions
+  requestOptions: QueryCellNoSubitemRequestOptions & { includeColumns: boolean }
 ): Promise<Board> {
-  const query = requestOptions.columns
-    ? GET_BOARD_LEVEL_CELL_NO_SUBITEM
-    : GET_BOARD_LEVEL_CELL_ALL_NO_SUBITEM;
+  const query = GET_BOARD;
 
-  const variables = requestOptions.columns
-    ? {
-        boardId: [boardId],
-        cellId: requestOptions.columns,
-      }
-    : {
-        boardId: [boardId],
-      };
+  const variables = {
+    boardId: [boardId],
+    includeColumns: requestOptions.includeColumns, 
+    includeGroups: true, 
+    includeItems: true,
+    includeCells: true, 
+    cellId: requestOptions.columns ?? null, 
+    subitemCellId: null,
+    includeSubitems: false,
+    includeSubitemCells: false
+  };
 
   const result =
     await executeGraphQLQuery<GET_BOARD_LEVEL_CELL_NO_SUBITEM_TYPE>(
@@ -436,20 +458,21 @@ async function getBoardLevelCellNoSubitem(
 async function getBoardLevelCellSubitemItem(
   clientOptions: ClientOptions,
   boardId: string | number,
-  requestOptions: QueryCellSubitemItemRequestOptions
+  requestOptions: QueryCellSubitemItemRequestOptions & { includeColumns: boolean }
 ): Promise<Board> {
-  const query = requestOptions.columns
-    ? GET_BOARD_LEVEL_CELL_SUBITEM_ITEM
-    : GET_BOARD_LEVEL_CELL_ALL_SUBITEM_ITEM;
+  const query = GET_BOARD;
 
-  const variables = requestOptions.columns
-    ? {
-        boardId: [boardId],
-        cellId: requestOptions.columns,
-      }
-    : {
-        boardId: [boardId],
-      };
+  const variables = {
+    boardId: [boardId],
+    includeColumns: requestOptions.includeColumns, 
+    includeGroups: true, 
+    includeItems: true,
+    includeCells: true, 
+    cellId: requestOptions.columns ?? null, 
+    subitemCellId: null,
+    includeSubitems: true,
+    includeSubitemCells: false
+  };
 
   const result =
     await executeGraphQLQuery<GET_BOARD_LEVEL_CELL_SUBITEM_ITEM_TYPE>(
@@ -523,35 +546,21 @@ async function getBoardLevelCellSubitemItem(
 async function getBoardLevelCellSubitemCell(
   clientOptions: ClientOptions,
   boardId: string | number,
-  requestOptions: QueryCellSubitemCellRequestOptions
+  requestOptions: QueryCellSubitemCellRequestOptions & { includeColumns: boolean }
 ): Promise<Board> {
-  const query = requestOptions.columns
-    ? requestOptions.subitemColumns
-      ? GET_BOARD_LEVEL_CELL_SUBITEM_CELL
-      : GET_BOARD_LEVEL_CELL_ALL_SUBITEM_CELL_ALL
-    : requestOptions.subitemColumns
-    ? GET_BOARD_LEVEL_CELL_ALL_SUBITEM_CELL
-    : GET_BOARD_LEVEL_CELL_ALL_SUBITEM_CELL_ALL;
+  const query = GET_BOARD;
 
-  const variables = requestOptions.columns
-    ? requestOptions.subitemColumns
-      ? {
-          boardId: [boardId],
-          cellId: requestOptions.columns,
-          subitemCellId: requestOptions.subitemColumns,
-        }
-      : {
-          boardId: [boardId],
-          cellId: requestOptions.columns,
-        }
-    : requestOptions.subitemColumns
-    ? {
-        boardId: [boardId],
-        subitemCellId: requestOptions.subitemColumns,
-      }
-    : {
-        boardId: [boardId],
-      };
+  const variables = {
+    boardId: [boardId],
+    includeColumns: requestOptions.includeColumns, 
+    includeGroups: true, 
+    includeItems: true,
+    includeCells: true, 
+    cellId: requestOptions.columns ?? null, 
+    subitemCellId: null,
+    includeSubitems: true,
+    includeSubitemCells: true
+  };
 
   const result =
     await executeGraphQLQuery<GET_BOARD_LEVEL_CELL_SUBITEM_CELL_TYPE>(
@@ -637,7 +646,7 @@ async function getBoardLevelCellSubitemCell(
 async function getBoardLevelCell(
   clientOptions: ClientOptions,
   boardId: string | number,
-  requestOptions: QueryCellRequestOptions
+  requestOptions: QueryCellRequestOptions & { includeColumns: boolean }
 ): Promise<Board> {
   switch (requestOptions.subitemLevel) {
     case "none":
@@ -666,7 +675,7 @@ async function getBoardLevelCell(
 export async function getBoard(
   clientOptions: ClientOptions,
   boardId: string | number,
-  requestOptions: QueryRequestOptions = { queryLevel: QueryLevel.Board, includeColumns: false }
+  requestOptions: QueryRequestOptions  & { includeColumns: boolean } = { queryLevel: QueryLevel.Board, includeColumns: false }
 ): Promise<Board> {
   const queryLevel = requestOptions.queryLevel;
   switch (queryLevel) {

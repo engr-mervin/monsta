@@ -42,7 +42,6 @@ export interface QueryWorkspaceRequestOptions extends RequestOptions {
 }
 export interface QueryBoardRequestOptions extends RequestOptions {
   queryLevel: QueryLevel.Board;
-  includeColumns: boolean;
 }
 export interface QueryGroupRequestOptions extends RequestOptions {
   queryLevel: QueryLevel.Group;

@@ -51,7 +51,7 @@ export class Board {
     return this._items;
   }
 
-  public async update(requestOptions: QueryRequestOptions) {
+  public async update(requestOptions: QueryRequestOptions & { includeColumns: boolean }) {
     const updatedBoard = await getBoard(
       this._clientOptions,
       this._boardId,
