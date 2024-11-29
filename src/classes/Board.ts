@@ -1,6 +1,7 @@
 import { MonstaaError } from "../error";
 import { getBoard } from "../queries/methods/getBoard";
 import { ClientOptions, QueryRequestOptions } from "../types/types";
+import { Column } from "./Column";
 import { Group } from "./Group";
 import { Item } from "./Item";
 
@@ -8,6 +9,7 @@ export class Board {
   private readonly _clientOptions!: ClientOptions;
   private _boardId: number;
   private _name: string;
+  private _columns?: Column[];
   private _groups?: Group[];
   private _items?: Item[];
 
@@ -15,6 +17,7 @@ export class Board {
     _clientOptions: ClientOptions,
     _boardId: number,
     _name: string,
+    _columns?: Column[],
     _groups?: Group[],
     _items?: Item[]
   ) {
@@ -26,6 +29,7 @@ export class Board {
     });
     this._boardId = _boardId;
     this._name = _name;
+    this._columns = _columns;
     this._groups = _groups;
     this._items = _items;
   }
@@ -36,6 +40,13 @@ export class Board {
 
   public get name() {
     return this._name;
+  }
+  
+  public get columns() {
+    if (!this._columns) {
+      throw new MonstaaError('access', `Columns is uninitialized.`);
+    }
+    return this._columns;
   }
 
   public get groups() {
