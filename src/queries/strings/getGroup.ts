@@ -1,385 +1,55 @@
-export const GET_GROUP_LEVEL_GROUP = `
-    query($boardId: [ID!], $groupId: [String!]){
-        boards(ids: $boardId) {
-            id
-            groups(ids: $groupId) {
-                id
-                title
-            }
-        }
-    }`;
-
-export const GET_GROUP_LEVEL_ITEM_NO_SUBITEM = `
-    query($boardId: [ID!], $groupId: [String!]){
-        boards(ids: $boardId) {
-            id
-            groups(ids: $groupId) {
-                id
-                title
-                items_page {
-                    items {
-                        id
-                        name
-                    }
-                }
-            }
-        }
-    }`;
-
-export const GET_GROUP_LEVEL_ITEM_SUBITEM_ITEM = `
-    query($boardId: [ID!], $groupId: [String!]){
-        boards(ids: $boardId) {
-            id
-            groups(ids: $groupId) {
-                id
-                title
-                items_page {
-                    items {
-                        id
-                        name
-                        subitems {
-                            board {
-                                id
-                            }
-                            group {
-                                id
-                            }
-                            id
-                            name
-                            }
-                    }
-                }
-            }
-        }
-    }`;
-
-export const GET_GROUP_LEVEL_ITEM_SUBITEM_CELL = `
-    query($boardId: [ID!], $groupId: [String!], $subitemCell: [String!]){
-        boards(ids: $boardId) {
-            id
-            groups(ids: $groupId) {
-                id
-                title
-                items_page {
-                    items {
-                        id
-                        name
-                        subitems {
-                            board {
-                                id
-                            }
-                            group {
-                                id
-                            }
-                            id
-                            name
-                        }
-                    }
-                }
-            }
-        }
-    }`;
-
-export const GET_GROUP_LEVEL_ITEM_SUBITEM_CELL_ALL = `
-    query($boardId: [ID!], $groupId: [String!]){
-        boards(ids: $boardId) {
-            id
-            groups(ids: $groupId) {
-                id
-                title
-                items_page {
-                    items {
-                        id
-                        name
-                        subitems {
-                            board {
-                                id
-                            }
-                            group {
-                                id
-                            }
-                            id
-                            name
-                        }
-                    }
-                }
-            }
-        }
-    }`;
-
-export const GET_GROUP_LEVEL_CELL_NO_SUBITEM = `
-    query($boardId: [ID!], $groupId: [String!], $cellId: [String!]){
-        boards(ids: $boardId) {
-            id
-            groups(ids: $groupId) {
-                id
-                title
-                items_page {
-                    items {
-                        id
-                        name
-                        column_values(ids: $cellId) {
-                            column {
-                                title
-                            }
-                            id
-                            value
-                            text
-                            type
-                        }
-                    }
-                }
-            }
-        }
-    }`;
-
-export const GET_GROUP_LEVEL_CELL_ALL_NO_SUBITEM = `
-    query($boardId: [ID!], $groupId: [String!]){
-        boards(ids: $boardId) {
-            id
-            groups(ids: $groupId) {
-                id
-                title
-                items_page {
-                    items {
-                        id
-                        name
-                        column_values {
-                            column {
-                                title
-                            }
-                            id
-                            value
-                            text
-                            type
-                        }
-                    }
-                }
-            }
-        }
-    }`;
-
-export const GET_GROUP_LEVEL_CELL_SUBITEM_ITEM = `
-query($boardId: [ID!], $groupId: [String!], $cellId: [String!]){
+export const GET_GROUP = `
+  query($boardId: [ID!], $groupId: [String!], $includeGroups: Boolean!, $includeItems: Boolean!,
+  $includeColumns: Boolean!, $cellId: [String!], $subitemCellId: [String!],
+  $includeCells: Boolean!, $includeSubitems: Boolean!, $includeSubitemCells: Boolean!) {
     boards(ids: $boardId) {
-        id
-        groups(ids: $groupId) {
+      id
+      name
+      items_page @include(if: $includeItems) {
+        items {
+          id
+          name
+          group {
             id
-            title
-            items_page {
-                items {
-                    subitems {
-                        board {
-                            id
-                        }
-                        group {
-                            id
-                        }
-                        id
-                        name
-                        }
-                    id
-                    name
-                    column_values(ids: $cellId) {
-                        column {
-                            title
-                        }
-                        id
-                        value
-                        text
-                        type
-                    }
-                }
+          }
+          column_values(ids: $cellId) @include(if: $includeCells) {
+            column {
+              title
             }
-        }
-    }
-}`;
-
-export const GET_GROUP_LEVEL_CELL_ALL_SUBITEM_ITEM = `
-query($boardId: [ID!], $groupId: [String!]){
-    boards(ids: $boardId) {
-        id
-        groups(ids: $groupId) {
+            text
+            type
+            value
             id
-            title
-            items_page {
-                items {
-                    subitems {
-                        board {
-                            id
-                        }
-                        group {
-                            id
-                        }
-                        id
-                        name
-                    }
-                    id
-                    name
-                    column_values {
-                        column {
-                            title
-                        }
-                        id
-                        value
-                        text
-                        type
-                    }
-                }
-            }
-        }
-    }
-}`;
-
-export const GET_GROUP_LEVEL_CELL_SUBITEM_CELL = `
-query($boardId: [ID!], $groupId: [String!], $cellId: [String!], $subitemCellId: [String!]){
-    boards(ids: $boardId) {
-        id
-        groups(ids: $groupId) {
+          }
+          subitems @include(if: $includeSubitems) {
             id
-            title
-            items_page {
-                items {
-                    subitems {
-                        board {
-                            id
-                        }
-                        group {
-                            id
-                        }
-                        id
-                        name
-                    }
-                    id
-                    name
-                    column_values(ids: $cellId) {
-                        column {
-                            title
-                        }
-                        id
-                        value
-                        text
-                        type
-                    }
-                }
+            name
+            board {
+              id
             }
+            group {
+              id
+            }
+            column_values(ids: $subitemCellId) @include(if: $includeSubitemCells) {
+              column {
+                title
+              }
+              text
+              type
+              value
+              id
+            }
+          }
         }
-    }
-}`;
-
-export const GET_GROUP_LEVEL_CELL_ALL_SUBITEM_CELL = `
-query($boardId: [ID!], $groupId: [String!], $subitemCellId: [String!]){
-    boards(ids: $boardId) {
+      }
+      groups(ids: $groupId) @include(if: $includeGroups) {
         id
-        groups(ids: $groupId) {
-            id
-            title
-            items_page {
-                items {
-                    subitems {
-                        board {
-                            id
-                        }
-                        group {
-                            id
-                        }
-                        id
-                        name
-                    }
-                    id
-                    name
-                    column_values {
-                        column {
-                            title
-                        }
-                        id
-                        value
-                        text
-                        type
-                    }
-                }
-            }
-        }
-    }
-}`;
-
-export const GET_GROUP_LEVEL_CELL_SUBITEM_CELL_ALL = `
-query($boardId: [ID!], $groupId: [String!], $cellId: [String!]){
-    boards(ids: $boardId) {
+        title
+      }
+      columns @include(if: $includeColumns) {
         id
-        groups(ids: $groupId) {
-            id
-            title
-            items_page {
-                items {
-                    subitems {
-                        board {
-                            id
-                        }
-                        group {
-                            id
-                        }
-                        id
-                        name
-                        column_values {
-                            column {
-                                title
-                            }
-                            id
-                            value
-                            text
-                            type
-                        }
-                        }
-                    id
-                    name
-                    column_values(ids: $cellId) {
-                        column {
-                            title
-                        }
-                        id
-                        value
-                        text
-                        type
-                    }
-                }
-            }
-        }
+        title
+        type
+      }
     }
-}`;
-
-export const GET_GROUP_LEVEL_CELL_ALL_SUBITEM_CELL_ALL = `
-query($boardId: [ID!], $groupId: [String!]){
-    boards(ids: $boardId) {
-        id
-        groups(ids: $groupId) {
-            id
-            title
-            items_page {
-                items {
-                    subitems {
-                        board {
-                            id
-                        }
-                        group {
-                            id
-                        }
-                        id
-                        name
-                    }
-                    id
-                    name
-                    column_values {
-                        column {
-                            title
-                        }
-                        id
-                        value
-                        text
-                        type
-                    }
-                }
-            }
-        }
-    }
-}`;
+  }`;

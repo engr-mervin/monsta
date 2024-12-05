@@ -4,9 +4,7 @@ import { Item } from "../../classes/Item";
 import { MonstaaError } from "../../error";
 import { GET_BOARD } from "../strings/getBoard";
 import { executeGraphQLQuery } from "../../services/mondayService";
-import {
-  GET_BOARD_TYPE,
-} from "../types/getBoard";
+import { GET_BOARD_TYPE } from "../types/getBoard";
 import {
   ClientOptions,
   QueryRequestOptions,
@@ -52,6 +50,11 @@ export async function getBoard(
     includeItems: [QueryLevel.Item, QueryLevel.Cell].includes(queryLevel),
     includeCells: queryLevel === QueryLevel.Cell,
     cellId: (queryLevel === QueryLevel.Cell && requestOptions.columns) ?? null,
+    subitemCellId:
+      ((queryLevel === QueryLevel.Item || queryLevel === QueryLevel.Cell) &&
+        requestOptions.subitemLevel === QueryLevel.Cell &&
+        requestOptions.subitemColumns) ??
+      null,
     includeSubitems:
       (queryLevel === QueryLevel.Item || queryLevel === QueryLevel.Cell) &&
       requestOptions.subitemLevel !== "none",
@@ -60,13 +63,12 @@ export async function getBoard(
       requestOptions.subitemLevel === QueryLevel.Cell,
   };
 
-  const result =
-    await executeGraphQLQuery<GET_BOARD_TYPE>(
-      clientOptions,
-      requestOptions,
-      query,
-      variables
-    );
+  const result = await executeGraphQLQuery<GET_BOARD_TYPE>(
+    clientOptions,
+    requestOptions,
+    query,
+    variables
+  );
 
   const board = result.data.boards[0];
 
@@ -78,11 +80,25 @@ export async function getBoard(
   }
 
   const allItems: Item[] = [];
-  const columns = !board.columns ? undefined : board.columns.map((column) => new Column(column.id, column.type, column.title));
-  const groups = !board.groups ? undefined : board.groups.map((group) => {
-    const items = !group.items_page ? undefined : group.items_page.items.map((item) => {
-      const subitems = !item.subitems ? undefined : item.subitems.map((subitem) => {
-        const cells = !subitem.column_values ? undefined : subitem.column_values.map(
+  const columns = board.columns?.map(
+    (column) => new Column(column.id, column.type, column.title)
+  );
+
+  const groupItemMapping: { [key: string]: Item[] } = {};
+  if (board.items_page) {
+    for (const item of board.items_page.items) {
+      const cells = item.column_values?.map(
+        (col) =>
+          new Cell(
+            col.id,
+            col.text,
+            col.type,
+            JSON.parse(col.value),
+            col.column.title
+          )
+      );
+      const subitems = item.subitems?.map((subitem) => {
+        const subitemCells = subitem.column_values?.map(
           (col) =>
             new Cell(
               col.id,
@@ -98,38 +114,34 @@ export async function getBoard(
           subitem.name,
           subitem.group.id,
           Number(subitem.board.id),
-          cells
+          subitemCells
         );
       });
-
-      const cells = !item.column_values ? undefined : item.column_values.map(
-        (col) =>
-          new Cell(
-            col.id,
-            col.text,
-            col.type,
-            JSON.parse(col.value),
-            col.column.title
-          )
-      );
-      const newItem = new Item(
+      const currItem = new Item(
         clientOptions,
         Number(item.id),
         item.name,
-        group.id,
+        item.group.id,
         Number(board.id),
         cells,
         subitems
       );
-      allItems.push(newItem);
-      return newItem;
-    });
+      if (!groupItemMapping[item.group.id]) {
+        groupItemMapping[item.group.id] = [currItem];
+      } else {
+        groupItemMapping[item.group.id].push(currItem);
+      }
+      allItems.push(currItem);
+    }
+  }
+
+  const groups = board.groups?.map((group) => {
     return new Group(
       clientOptions,
       group.id,
       group.title,
       Number(board.id),
-      items
+      groupItemMapping[group.id]
     );
   });
 
@@ -137,6 +149,7 @@ export async function getBoard(
     clientOptions,
     Number(boardId),
     board.name,
+    columns,
     groups,
     allItems
   );

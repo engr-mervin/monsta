@@ -109,6 +109,21 @@
    * 
    * Add getuser - ok
    * Improve query building
-   * Improve types
+   * Improve types - ok 
    * Add columns query to board + subitem board + subitem columns
    */
+
+
+  //TODO: Thursday 
+  //Don't use any items_page in the query..
+  //Separate by items, you can do items + subitems on one shot
+  //But boards and groups are another group adn should be disconnected to items+subitems
+  //get items + get boards only,
+  //get groups fall under boards
+  //and any deeper query will re-use items
+
+  //Think of how to add complexity to the mix + adding custom columns
+  //Maybe also add limit to items on deep queries, to prevent exhausting 5_000_000 limit
+
+  //An idea (Tuesday API) is to batch all the item ids from theme/offer/config before triggering the query
+  //and segregating them locally
