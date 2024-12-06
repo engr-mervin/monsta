@@ -32,7 +32,7 @@ export class MondayClient {
   /** You should use this if you need the whole board / groups / items, if you know you'll only need specific entities, then use specific query */
   public async getWorkspace(
     workspaceId: string | number,
-    requestOptions: QueryRequestOptions & { includeColumns: boolean } = {
+    requestOptions: QueryRequestOptions & { includeColumns?: boolean } = {
       queryLevel: QueryLevel.Board,
       includeColumns: false,
     }
@@ -42,7 +42,7 @@ export class MondayClient {
 
   public async getBoard(
     boardId: string | number,
-    requestOptions: QueryRequestOptions & { includeColumns: boolean } = {
+    requestOptions: QueryRequestOptions & { includeColumns?: boolean } = {
       queryLevel: QueryLevel.Board,
       includeColumns: false,
     }
@@ -52,7 +52,7 @@ export class MondayClient {
 
   public async getBoards(
     boardIds: (string | number)[],
-    requestOptions: QueryRequestOptions & { includeColumns: boolean } = {
+    requestOptions: QueryRequestOptions & { includeColumns?: boolean } = {
       queryLevel: QueryLevel.Board,
       includeColumns: false,
     }

@@ -17,7 +17,7 @@ import { Column } from "../../classes/Column";
 export async function getBoard(
   clientOptions: ClientOptions,
   boardId: string | number,
-  requestOptions: QueryRequestOptions & { includeColumns: boolean } = {
+  requestOptions: QueryRequestOptions & { includeColumns?: boolean } = {
     queryLevel: QueryLevel.Board,
     includeColumns: false,
   }
@@ -41,7 +41,7 @@ export async function getBoard(
 
   const variables = {
     boardId: [boardId],
-    includeColumns: requestOptions.includeColumns,
+    includeColumns: requestOptions.includeColumns || false,
     includeGroups: [
       QueryLevel.Group,
       QueryLevel.Item,

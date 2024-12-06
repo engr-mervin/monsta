@@ -17,7 +17,7 @@ import { Workspace } from "../../classes/Workspace";
 export async function getWorkspace(
   clientOptions: ClientOptions,
   workspaceId: string | number,
-  requestOptions: QueryRequestOptions & { includeColumns: boolean } = {
+  requestOptions: QueryRequestOptions & { includeColumns?: boolean } = {
     queryLevel: QueryLevel.Workspace,
     includeColumns: false,
   }
@@ -35,7 +35,7 @@ export async function getWorkspace(
   const variables = {
     workspaceId,
     includeBoards: [QueryLevel.Board, QueryLevel.Group, QueryLevel.Item, QueryLevel.Cell].includes(queryLevel),
-    includeColumns: requestOptions.includeColumns,
+    includeColumns: requestOptions.includeColumns || false,
     includeGroups: [
       QueryLevel.Group,
       QueryLevel.Item,
