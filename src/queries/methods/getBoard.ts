@@ -21,7 +21,7 @@ export async function getBoard(
     queryLevel: QueryLevel.Board,
     includeColumns: false,
   }
-): Promise<Board> {
+): Promise<Board | null> {
   const queryLevel = requestOptions.queryLevel;
 
   if (queryLevel === QueryLevel.Cell && __DEV__) {
@@ -73,10 +73,7 @@ export async function getBoard(
   const board = result.data.boards[0];
 
   if (!board) {
-    throw new MonstaaError(
-      "query",
-      `Board with board id: ${boardId} not found or you lack the necessary privileges to access this board.`
-    );
+    return null;
   }
 
   const allItems: Item[] = [];
@@ -147,7 +144,7 @@ export async function getBoard(
 
   return new Board(
     clientOptions,
-    Number(boardId),
+    Number(board.id),
     board.name,
     columns,
     groups,

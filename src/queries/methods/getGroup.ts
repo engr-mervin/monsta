@@ -11,19 +11,14 @@ import {
 } from "../../types/types";
 import { Group } from "../../classes/Group";
 import { GET_GROUP_TYPE } from "../types/getGroup";
-import { __DEV__ } from "../../setup";
 
 export async function getGroup(
   clientOptions: ClientOptions,
   group: Group_RowQuery,
   requestOptions: QueryRequestOptions = { queryLevel: QueryLevel.Group }
-): Promise<Group> {
+): Promise<Group | null> {
   const queryLevel = requestOptions.queryLevel;
-  if (queryLevel === QueryLevel.Cell && __DEV__) {
-    console.warn(
-      `NOTE: Deep query level might cause performance issues and might get throttled by Monday. Use with precaution.`
-    );
-  }
+
   if ([QueryLevel.Workspace, QueryLevel.Board].includes(queryLevel)) {
     throw new MonstaaError(
       "query",
@@ -52,12 +47,6 @@ export async function getGroup(
       requestOptions.subitemLevel === QueryLevel.Cell,
   };
 
-  if (variables.includeSubitemCells && __DEV__) {
-    console.log(
-      `NOTE: The query getGroup with subitem cells triggers 2 queries in Monday because of depth limitations.`
-    );
-  }
-
   const result = await executeGraphQLQuery<GET_GROUP_TYPE>(
     clientOptions,
     requestOptions,
@@ -71,10 +60,7 @@ export async function getGroup(
   const board = result.data.boards[0];
 
   if (!board.groups[0]) {
-    throw new MonstaaError(
-      "query",
-      `No group found with id: ${group.groupId}, or group is not associated with board id: ${group.boardId}`
-    );
+    return null;
   }
 
   const resultGroup = board.groups[0];

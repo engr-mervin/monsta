@@ -43,7 +43,7 @@ export class Group {
 
   public get items() {
     if (!this._items) {
-      throw new MonstaaError('access', `Items is uninitialized.`);
+      throw new MonstaaError("access", `Items is uninitialized.`);
     }
     return this._items;
   }
@@ -54,6 +54,10 @@ export class Group {
       this,
       requestOptions
     );
+
+    if (!updatedGroup) {
+      throw new Error("Tried updating deleted group");
+    }
     this._title = updatedGroup.title;
     this._items = updatedGroup.items;
     return this;

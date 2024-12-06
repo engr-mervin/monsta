@@ -1,7 +1,10 @@
 import { Cell } from "../../classes/Cell";
 import { Group } from "../../classes/Group";
 import { Item } from "../../classes/Item";
+import { MonstaaError } from "../../error";
+import { GET_BOARD } from "../strings/getBoard";
 import { executeGraphQLQuery } from "../../services/mondayService";
+import { GET_BOARD_TYPE } from "../types/getBoard";
 import {
   ClientOptions,
   QueryRequestOptions,
@@ -10,18 +13,15 @@ import {
 import { __DEV__ } from "../../setup";
 import { Board } from "../../classes/Board";
 import { Column } from "../../classes/Column";
-import { GET_WORKSPACE } from "../strings/getWorkspace";
-import { GET_WORKSPACE_TYPE } from "../types/getWorkspace";
-import { Workspace } from "../../classes/Workspace";
 
-export async function getWorkspace(
+export async function getBoards(
   clientOptions: ClientOptions,
-  workspaceId: string | number,
+  boardIds: (string | number)[],
   requestOptions: QueryRequestOptions & { includeColumns: boolean } = {
-    queryLevel: QueryLevel.Workspace,
+    queryLevel: QueryLevel.Board,
     includeColumns: false,
   }
-): Promise<Workspace | null> {
+): Promise<Board[]> {
   const queryLevel = requestOptions.queryLevel;
 
   if (queryLevel === QueryLevel.Cell && __DEV__) {
@@ -30,11 +30,17 @@ export async function getWorkspace(
     );
   }
 
-  const query = GET_WORKSPACE;
+  if (queryLevel === QueryLevel.Workspace) {
+    throw new MonstaaError(
+      "query",
+      `Query level chosen: ${queryLevel} is not applicable to the calling function: getBoard.`
+    );
+  }
+
+  const query = GET_BOARD;
 
   const variables = {
-    workspaceId,
-    includeBoards: [QueryLevel.Board, QueryLevel.Group, QueryLevel.Item, QueryLevel.Cell].includes(queryLevel),
+    boardId: boardIds,
     includeColumns: requestOptions.includeColumns,
     includeGroups: [
       QueryLevel.Group,
@@ -57,7 +63,7 @@ export async function getWorkspace(
       requestOptions.subitemLevel === QueryLevel.Cell,
   };
 
-  const result = await executeGraphQLQuery<GET_WORKSPACE_TYPE>(
+  const result = await executeGraphQLQuery<GET_BOARD_TYPE>(
     clientOptions,
     requestOptions,
     query,
@@ -65,13 +71,14 @@ export async function getWorkspace(
   );
 
   const boards = result.data.boards;
-  const workspace = result.data.workspaces[0];
-  if(!workspace){
-    return null;
+
+  if (boards.length === 0) {
+    return [];
   }
-  
-  const allBoards = boards?.map((board) => {
-    const allItems: Item[] = [];
+
+  const allItems: Item[] = [];
+
+  return boards.map((board) => {
     const columns = board.columns?.map(
       (column) => new Column(column.id, column.type, column.title)
     );
@@ -145,6 +152,4 @@ export async function getWorkspace(
       allItems
     );
   });
-
-  return new Workspace(clientOptions, Number(workspace.id), workspace.name, allBoards);
 }

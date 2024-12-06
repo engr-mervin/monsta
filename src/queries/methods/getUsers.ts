@@ -7,15 +7,15 @@ import { GET_USER } from "../strings/getUser";
 import { GET_USER_TYPE } from "../types/getUser";
 import { User } from "../../classes/User";
 
-export async function getUser(
+export async function getUsers(
   clientOptions: ClientOptions,
-  userId: string | number,
+  userIds: (string | number)[],
   requestOptions: RequestOptions = {}
-): Promise<User | null> {
+): Promise<User[]> {
   const query = GET_USER;
 
   const variables = {
-    userId: [userId],
+    userId: userIds,
   };
 
   const result = await executeGraphQLQuery<GET_USER_TYPE>(
@@ -25,11 +25,11 @@ export async function getUser(
     variables
   );
 
-  const user = result.data.users[0];
+  const users = result.data.users;
 
-  if (!user) {
-    return null;
+  if (users.length === 0) {
+    return [];
   }
 
-  return new User(clientOptions, Number(user.id), user.name, user.email);
+  return users.map(user => new User(clientOptions, Number(user.id), user.name, user.email));
 }

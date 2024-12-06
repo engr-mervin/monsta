@@ -81,6 +81,10 @@ export class Item {
       this,
       requestOptions
     );
+    
+    if (!updatedItem) {
+      throw new Error("Tried updating deleted item");
+    }
 
     this._itemId = updatedItem.itemId;
     this._name = updatedItem.name;

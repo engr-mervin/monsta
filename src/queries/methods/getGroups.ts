@@ -1,46 +1,35 @@
 import { Cell } from "../../classes/Cell";
-import { Group } from "../../classes/Group";
 import { Item } from "../../classes/Item";
+import { MonstaaError } from "../../error";
+import { GET_GROUP } from "../strings/getGroup";
 import { executeGraphQLQuery } from "../../services/mondayService";
 import {
   ClientOptions,
   QueryRequestOptions,
   QueryLevel,
 } from "../../types/types";
-import { __DEV__ } from "../../setup";
-import { Board } from "../../classes/Board";
-import { Column } from "../../classes/Column";
-import { GET_WORKSPACE } from "../strings/getWorkspace";
-import { GET_WORKSPACE_TYPE } from "../types/getWorkspace";
-import { Workspace } from "../../classes/Workspace";
+import { Group } from "../../classes/Group";
+import { GET_GROUP_TYPE } from "../types/getGroup";
 
-export async function getWorkspace(
+export async function getGroups(
   clientOptions: ClientOptions,
-  workspaceId: string | number,
-  requestOptions: QueryRequestOptions & { includeColumns: boolean } = {
-    queryLevel: QueryLevel.Workspace,
-    includeColumns: false,
-  }
-): Promise<Workspace | null> {
+  group: { boardId: string | number; groupIds: string[] },
+  requestOptions: QueryRequestOptions = { queryLevel: QueryLevel.Group }
+): Promise<Group[]> {
   const queryLevel = requestOptions.queryLevel;
 
-  if (queryLevel === QueryLevel.Cell && __DEV__) {
-    console.warn(
-      `NOTE: Deep query level might cause performance issues and might get throttled by Monday. Use with precaution.`
+  if ([QueryLevel.Workspace, QueryLevel.Board].includes(queryLevel)) {
+    throw new MonstaaError(
+      "query",
+      `Query level chosen: ${queryLevel} is not applicable to the calling function: getGroup.`
     );
   }
 
-  const query = GET_WORKSPACE;
+  const query = GET_GROUP;
 
   const variables = {
-    workspaceId,
-    includeBoards: [QueryLevel.Board, QueryLevel.Group, QueryLevel.Item, QueryLevel.Cell].includes(queryLevel),
-    includeColumns: requestOptions.includeColumns,
-    includeGroups: [
-      QueryLevel.Group,
-      QueryLevel.Item,
-      QueryLevel.Cell,
-    ].includes(queryLevel),
+    boardId: [group.boardId],
+    groupId: group.groupIds,
     includeItems: [QueryLevel.Item, QueryLevel.Cell].includes(queryLevel),
     includeCells: queryLevel === QueryLevel.Cell,
     cellId: (queryLevel === QueryLevel.Cell && requestOptions.columns) ?? null,
@@ -57,27 +46,30 @@ export async function getWorkspace(
       requestOptions.subitemLevel === QueryLevel.Cell,
   };
 
-  const result = await executeGraphQLQuery<GET_WORKSPACE_TYPE>(
+  const result = await executeGraphQLQuery<GET_GROUP_TYPE>(
     clientOptions,
     requestOptions,
     query,
     variables
   );
 
-  const boards = result.data.boards;
-  const workspace = result.data.workspaces[0];
-  if(!workspace){
-    return null;
+  if (!result.data.boards[0]) {
+    throw new MonstaaError("query", `No board found with id: ${group.boardId}`);
   }
-  
-  const allBoards = boards?.map((board) => {
-    const allItems: Item[] = [];
-    const columns = board.columns?.map(
-      (column) => new Column(column.id, column.type, column.title)
-    );
-    const groupItemMapping: { [key: string]: Item[] } = {};
+  const board = result.data.boards[0];
+
+  if (!board.groups[0]) {
+    return [];
+  }
+
+  return board.groups.map((resultGroup) => {
+    let groupItems: Item[] | undefined;
     if (board.items_page) {
+      groupItems = [];
       for (const item of board.items_page.items) {
+        if (item.group.id !== resultGroup.id) {
+          continue;
+        }
         const cells = item.column_values?.map(
           (col) =>
             new Cell(
@@ -117,34 +109,17 @@ export async function getWorkspace(
           cells,
           subitems
         );
-        if (!groupItemMapping[item.group.id]) {
-          groupItemMapping[item.group.id] = [currItem];
-        } else {
-          groupItemMapping[item.group.id].push(currItem);
-        }
-        allItems.push(currItem);
+
+        groupItems.push(currItem);
       }
     }
 
-    const groups = board.groups?.map((group) => {
-      return new Group(
-        clientOptions,
-        group.id,
-        group.title,
-        Number(board.id),
-        groupItemMapping[group.id]
-      );
-    });
-
-    return new Board(
+    return new Group(
       clientOptions,
-      Number(board.id),
-      board.name,
-      columns,
-      groups,
-      allItems
+      resultGroup.id,
+      resultGroup.title,
+      Number(group.boardId),
+      groupItems
     );
   });
-
-  return new Workspace(clientOptions, Number(workspace.id), workspace.name, allBoards);
 }

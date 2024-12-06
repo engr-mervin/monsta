@@ -41,33 +41,39 @@ export class Board {
   public get name() {
     return this._name;
   }
-  
+
   public get columns() {
     if (!this._columns) {
-      throw new MonstaaError('access', `Columns is uninitialized.`);
+      throw new MonstaaError("access", `Columns is uninitialized.`);
     }
     return this._columns;
   }
 
   public get groups() {
     if (!this._groups) {
-      throw new MonstaaError('access', `Groups is uninitialized.`);
+      throw new MonstaaError("access", `Groups is uninitialized.`);
     }
     return this._groups;
   }
   public get items() {
     if (!this._items) {
-      throw new MonstaaError('access', `Items is uninitialized.`);
+      throw new MonstaaError("access", `Items is uninitialized.`);
     }
     return this._items;
   }
 
-  public async update(requestOptions: QueryRequestOptions & { includeColumns: boolean }) {
+  public async update(
+    requestOptions: QueryRequestOptions & { includeColumns: boolean }
+  ) {
     const updatedBoard = await getBoard(
       this._clientOptions,
       this._boardId,
       requestOptions
     );
+
+    if (!updatedBoard) {
+      throw new Error("Tried updating deleted board");
+    }
     this._name = updatedBoard.name;
     this._groups = updatedBoard.groups;
     this._items = updatedBoard.items;

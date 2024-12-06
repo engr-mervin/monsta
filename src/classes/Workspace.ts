@@ -35,12 +35,17 @@ export class Workspace {
     return this._boards;
   }
 
-  public async update(requestOptions: QueryRequestOptions) {
+  public async update(
+    requestOptions: QueryRequestOptions & { includeColumns: boolean }
+  ) {
     const updatedWS = await getWorkspace(
       this._clientOptions,
       this._workspaceId,
       requestOptions
     );
+    if (!updatedWS) {
+      throw new Error("Tried updating deleted workspace");
+    }
     this._name = updatedWS.name;
     this._boards = updatedWS.boards;
 

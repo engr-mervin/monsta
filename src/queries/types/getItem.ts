@@ -1,15 +1,43 @@
-import { BaseCell, BaseResponse, ItemWithParentIDs, ItemWithSubitemsAndParentIDs } from "../../types/mondayTypes";
-
-export type GET_ITEM_LEVEL_ITEM_NO_SUBITEM_TYPE = BaseResponse<{items: ItemWithParentIDs[]}>;
-
-export type GET_ITEM_LEVEL_ITEM_SUBITEM_ITEM_TYPE = BaseResponse<{items: ItemWithSubitemsAndParentIDs<undefined, ItemWithParentIDs[]>[]}>;
-export type GET_ITEM_LEVEL_ITEM_SUBITEM_CELL_TYPE = BaseResponse<{items: ItemWithSubitemsAndParentIDs<undefined, ItemWithParentIDs<BaseCell[]>[]>[]}>;
-
-
-export type GET_ITEM_LEVEL_CELL_NO_SUBITEM_TYPE = BaseResponse<{items:  ItemWithParentIDs<BaseCell[]>[]}>;
-
-export type GET_ITEM_LEVEL_CELL_SUBITEM_ITEM_TYPE = BaseResponse<{items: ItemWithSubitemsAndParentIDs<BaseCell[], ItemWithParentIDs[]>[]}>;
-export type GET_ITEM_LEVEL_CELL_SUBITEM_CELL_TYPE = BaseResponse<{items: ItemWithSubitemsAndParentIDs<BaseCell[], ItemWithParentIDs<BaseCell[]>[]>[]}>;
-
-
-
+export interface GET_ITEM_TYPE {
+  data: {
+    items: {
+      id: string;
+      name: string;
+      board: {
+        id: string;
+      }
+      group: {
+        id: string;
+      };
+      column_values?: {
+        column: {
+          title: string;
+        };
+        id: string;
+        text: null | string;
+        type: string;
+        value: string;
+      }[];
+      subitems?: {
+        id: string;
+        name: string;
+        board: {
+          id: string;
+        };
+        group: {
+          id: string;
+        };
+        column_values?: {
+          column: {
+            title: string;
+          };
+          id: string;
+          text: null | string;
+          type: string;
+          value: string;
+        }[];
+      }[];
+    }[];
+  };
+  account_id: number;
+}
