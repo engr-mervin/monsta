@@ -49,11 +49,11 @@ export async function getBoard(
     ].includes(queryLevel),
     includeItems: [QueryLevel.Item, QueryLevel.Cell].includes(queryLevel),
     includeCells: queryLevel === QueryLevel.Cell,
-    cellId: (queryLevel === QueryLevel.Cell && requestOptions.columns) ?? null,
+    cellId: (queryLevel === QueryLevel.Cell && requestOptions.columns) || null,
     subitemCellId:
       ((queryLevel === QueryLevel.Item || queryLevel === QueryLevel.Cell) &&
         requestOptions.subitemLevel === QueryLevel.Cell &&
-        requestOptions.subitemColumns) ??
+        requestOptions.subitemColumns) ||
       null,
     includeSubitems:
       (queryLevel === QueryLevel.Item || queryLevel === QueryLevel.Cell) &&
