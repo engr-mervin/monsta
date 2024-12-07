@@ -10,7 +10,7 @@ export class Item {
   private _groupId: string;
   private _boardId: number;
   private _values: Record<string, CellValue> | undefined = undefined;
-  private _cells?: Cell[];
+  private _cells?: Record<string, Cell>;
   private _subitems?: Item[];
 
   constructor(
@@ -32,9 +32,8 @@ export class Item {
     this._name = _name;
     this._groupId = _groupId;
     this._boardId = _boardId;
-    this._cells = _cells;
     this._subitems = _subitems;
-    this.buildMapping();
+    this.buildMapping(_cells);
   }
 
   public get itemId() {
@@ -51,27 +50,34 @@ export class Item {
   }
   public get cells() {
     if (!this._cells) {
-      throw new MonstaaError('access', `Cells is uninitialized.`);
+      throw new MonstaaError("access", `Cells is uninitialized.`);
     }
     return this._cells;
   }
   public get values() {
-    if(!this._values) {
-      throw new MonstaaError('access', `Values is uninitialized.`);
+    if (!this._values) {
+      throw new MonstaaError("access", `Values is uninitialized.`);
     }
     return this._values;
   }
   public get subitems() {
     if (!this._subitems) {
-      throw new MonstaaError('access', `Subitems is uninitialized.`);
+      throw new MonstaaError("access", `Subitems is uninitialized.`);
     }
     return this._subitems;
   }
 
-  private buildMapping() {
-    if (this._cells) {
+  private buildMapping(cells?: Cell[]) {
+    if (cells) {
       this._values = {};
-      this._cells.forEach((cell) => (this._values![cell.columnId] = cell.value));
+      this._cells = {};
+      cells.forEach((cell) => {
+        this._cells![cell.columnId] = cell;
+        this._values![cell.columnId] = cell.value;
+      });
+    } else {
+      this._cells = undefined;
+      this._values = undefined;
     }
   }
 
@@ -81,7 +87,7 @@ export class Item {
       this,
       requestOptions
     );
-    
+
     if (!updatedItem) {
       throw new Error("Tried updating deleted item");
     }
@@ -92,7 +98,7 @@ export class Item {
     this._boardId = updatedItem.boardId;
     this._cells = updatedItem.cells;
     this._subitems = updatedItem.subitems;
-    this.buildMapping();
+    this._values = updatedItem.values;
     return this;
   }
 }
