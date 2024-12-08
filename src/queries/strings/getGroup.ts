@@ -1,6 +1,5 @@
 export const GET_GROUP = `
-  query($boardId: [ID!], $groupId: [String!], $includeGroups: Boolean!, $includeItems: Boolean!,
-  $includeColumns: Boolean!, $cellId: [String!], $subitemCellId: [String!],
+  query($boardId: [ID!], $groupId: [String!], $includeItems: Boolean!, $cellId: [String!], $subitemCellId: [String!],
   $includeCells: Boolean!, $includeSubitems: Boolean!, $includeSubitemCells: Boolean!) {
     boards(ids: $boardId) {
       id
@@ -42,14 +41,9 @@ export const GET_GROUP = `
           }
         }
       }
-      groups(ids: $groupId) @include(if: $includeGroups) {
+      groups(ids: $groupId) {
         id
         title
-      }
-      columns @include(if: $includeColumns) {
-        id
-        title
-        type
       }
     }
   }`;
