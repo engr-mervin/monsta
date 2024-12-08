@@ -37,4 +37,6 @@ query ($itemId: [ID!], $cellId: [String!], $subitemCellId: [String!], $includeCe
         id
       }
     }
+  }
+}
 `;
