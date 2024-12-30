@@ -9,8 +9,9 @@ export class Item {
   private _name: string;
   private _groupId: string;
   private _boardId: number;
-  private _values: Record<string, CellValue> | undefined = undefined;
-  private _cells?: Record<string, Cell>;
+  private _values: Record<string, CellValue | undefined> | undefined =
+    undefined;
+  private _cells?: Record<string, Cell | undefined>;
   private _subitems?: Item[];
 
   constructor(
