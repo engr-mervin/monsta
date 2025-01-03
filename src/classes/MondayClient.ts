@@ -1,3 +1,4 @@
+import { getAsset } from "../queries/methods/getAsset";
 import { getBoard } from "../queries/methods/getBoard";
 import { getBoards } from "../queries/methods/getBoards";
 import { getGroup } from "../queries/methods/getGroup";
@@ -7,6 +8,7 @@ import { getItems } from "../queries/methods/getItems";
 import { getUser } from "../queries/methods/getUser";
 import { getUsers } from "../queries/methods/getUsers";
 import { getWorkspace } from "../queries/methods/getWorkspace";
+import { executeGraphQLQuery } from "../services/mondayService";
 import {
   Group_RowQuery,
   ClientOptions,
@@ -106,4 +108,23 @@ export class MondayClient {
     return await getUsers(this.clientOptions, userIds, requestOptions);
   }
 
+  public async getAsset(
+    assetId: string | number,
+    requestOptions: RequestOptions = {}
+  ) {
+    return await getAsset(this.clientOptions, assetId, requestOptions);
+  }
+
+  public async executeGraphQLQuery(
+    query: string,
+    variables: Record<string, unknown>,
+    requestOptions: RequestOptions
+  ) {
+    return await executeGraphQLQuery(
+      this.clientOptions,
+      requestOptions,
+      query,
+      variables
+    );
+  }
 }

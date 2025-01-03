@@ -31,15 +31,15 @@ export class Cell {
     return this._value;
   }
 
-  public get text(){
+  public get text() {
     return this._text;
   }
 
-  public get type(){
+  public get type() {
     return this._type;
   }
 
-  public get value(): CellValue {
+  public get value() {
     if (this._type === "checkbox") {
       return Boolean(this._value.checked);
     } else if (this._type === "numbers") {
@@ -47,11 +47,21 @@ export class Cell {
     } else if (this._type === "timeline") {
       return [this._value.from as string, this._value.to as string];
     } else if (this._type === "dropdown") {
-      return this._text ? this._text.split(',') : null;
+      return this._text ? this._text.split(",") : null;
+    } else if (this._type === "file") {
+      const files = this._value.files as { assetId: string; name: string }[];
+      return files[0].assetId;
     } else {
       return this._text;
     }
   }
 }
 
-export type CellValue = null | boolean | number | string | [string, string] | string[]; 
+export type CellValue =
+  | null
+  | boolean
+  | number
+  | string
+  | [string, string]
+  | string[]
+  | { id: string; name: string };
