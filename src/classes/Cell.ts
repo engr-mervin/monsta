@@ -78,4 +78,5 @@ export type CellValue =
   | DateCellValue
   | TimelineCellValue
   | FileCellValue
-  | DropdownCellValue;
+  | DropdownCellValue
+  | NumberCellValue;
