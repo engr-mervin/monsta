@@ -47,7 +47,7 @@ export class Cell {
     } else if (this._type === "timeline") {
       return this._value === null
         ? null
-        : [this._value.from as string, this._value.to as string];
+        : { from: this._value.from, to: this._value.to };
     } else if (this._type === "dropdown") {
       return this._text ? this._text.split(",") : null;
     } else if (this._type === "date") {
@@ -66,9 +66,10 @@ export class Cell {
 
 export type NumberCellValue = null | number;
 export type DateCellValue = null | string;
-export type TimelineCellValue = null | [string, string];
+export type TimelineCellValue = null | { from: string; to: string };
 export type FileCellValue = null | number;
 export type DropdownCellValue = null | string[];
+export type HourCellValue = null | { hour: string; minute: string };
 
 export type CellValue =
   | null
@@ -79,4 +80,5 @@ export type CellValue =
   | TimelineCellValue
   | FileCellValue
   | DropdownCellValue
-  | NumberCellValue;
+  | NumberCellValue
+  | HourCellValue;
