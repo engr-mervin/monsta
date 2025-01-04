@@ -47,7 +47,7 @@ export class Cell {
     } else if (this._type === "timeline") {
       return this._value === null
         ? null
-        : { from: this._value.from, to: this._value.to };
+        : { from: this._value.from as string, to: this._value.to as string };
     } else if (this._type === "dropdown") {
       return this._text ? this._text.split(",") : null;
     } else if (this._type === "date") {
