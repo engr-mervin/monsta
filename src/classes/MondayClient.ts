@@ -8,6 +8,7 @@ import { getItems } from "../queries/methods/getItems";
 import { getUser } from "../queries/methods/getUser";
 import { getUsers } from "../queries/methods/getUsers";
 import { getWorkspace } from "../queries/methods/getWorkspace";
+import { writeUpdate } from "../queries/methods/writeUpdate";
 import { executeGraphQLQuery } from "../services/mondayService";
 import {
   Group_RowQuery,
@@ -118,13 +119,26 @@ export class MondayClient {
   public async executeGraphQLQuery(
     query: string,
     variables: Record<string, unknown>,
-    requestOptions: RequestOptions
+    requestOptions: RequestOptions = {}
   ) {
     return await executeGraphQLQuery(
       this.clientOptions,
       requestOptions,
       query,
       variables
+    );
+  }
+
+  public async writeUpdate(
+    itemId: number,
+    update: string,
+    requestOptions: RequestOptions = {}
+  ) {
+    return await writeUpdate(
+      this.clientOptions,
+      itemId,
+      update,
+      requestOptions
     );
   }
 }
