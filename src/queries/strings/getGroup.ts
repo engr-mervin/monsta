@@ -4,7 +4,7 @@ export const GET_GROUP = `
     boards(ids: $boardId) {
       id
       name
-      items_page @include(if: $includeItems) {
+      items_page (limit: 500) @include(if: $includeItems) {
         items {
           id
           name
