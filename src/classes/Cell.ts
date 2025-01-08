@@ -71,6 +71,17 @@ export type FileCellValue = null | number[];
 export type DropdownCellValue = null | string[];
 export type HourCellValue = null | { hour: string; minute: string };
 
+export type FileCellRawValue = {
+  files: {
+    name: string;
+    assetId: number;
+    isImage: string;
+    fileType: string;
+    createdAt: number;
+    createdBy: string;
+  }[];
+};
+
 export type CellValue =
   | null
   | boolean
