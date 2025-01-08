@@ -57,7 +57,7 @@ export class Cell {
         return null;
       }
       const files = this._value.files as { assetId: string; name: string }[];
-      return Number(files[0].assetId);
+      return files.map((file) => Number(file.assetId));
     } else {
       return this._text;
     }
@@ -67,7 +67,7 @@ export class Cell {
 export type NumberCellValue = null | number;
 export type DateCellValue = null | string;
 export type TimelineCellValue = null | { from: string; to: string };
-export type FileCellValue = null | number;
+export type FileCellValue = null | number[];
 export type DropdownCellValue = null | string[];
 export type HourCellValue = null | { hour: string; minute: string };
 
