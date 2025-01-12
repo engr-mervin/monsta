@@ -1,7 +1,15 @@
 import { MonstaaError } from "../error";
 import { getGroup } from "../queries/methods/getGroup";
 import { ClientOptions, QueryRequestOptions } from "../types/types";
-import { Item } from "./Item";
+import { Item, JSONItem } from "./Item";
+
+export interface JSONGroup {
+  _clientOptions: ClientOptions;
+  _groupId: string;
+  _title: string;
+  _boardId: number;
+  _items?: JSONItem[];
+}
 
 export class Group {
   private _groupId: string;
@@ -27,6 +35,16 @@ export class Group {
     this._title = _title;
     this._boardId = _boardId;
     this._items = _items;
+  }
+
+  public static fromJSON(clientOptions: ClientOptions, jsonGroup: JSONGroup): Group {
+    return new Group(
+      clientOptions,
+      jsonGroup._groupId,
+      jsonGroup._title,
+      jsonGroup._boardId,
+      jsonGroup._items?.map((item) => Item.fromJSON(clientOptions, item))
+    );
   }
 
   public get groupId() {

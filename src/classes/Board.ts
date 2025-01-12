@@ -1,16 +1,16 @@
 import { MonstaaError } from "../error";
 import { getBoard } from "../queries/methods/getBoard";
 import { ClientOptions, QueryRequestOptions } from "../types/types";
-import { Column } from "./Column";
-import { Group } from "./Group";
-import { Item } from "./Item";
+import { Column, JSONColumn } from "./Column";
+import { Group, JSONGroup } from "./Group";
+import { Item, JSONItem } from "./Item";
 
 export interface JSONBoard {
-  boardId: number;
-  name: string;
-  columns?: Column[];
-  groups?: Group[];
-  items?: Item[];
+  _boardId: number;
+  _name: string;
+  _columns?: JSONColumn[];
+  _groups?: JSONGroup[];
+  _items?: JSONItem[];
 }
 export class Board {
   private readonly _clientOptions!: ClientOptions;
@@ -47,24 +47,26 @@ export class Board {
   ): Board {
     return new Board(
       clientOptions,
-      jsonBoard.boardId,
-      jsonBoard.name,
-      jsonBoard.columns,
-      jsonBoard.groups,
-      jsonBoard.items
+      jsonBoard._boardId,
+      jsonBoard._name,
+      jsonBoard._columns?.map(
+        (col) => new Column(col._columnId, col._type, col._title)
+      ),
+      jsonBoard._groups?.map((group) => Group.fromJSON(clientOptions, group)),
+      jsonBoard._items?.map((item) => Item.fromJSON(clientOptions, item))
     );
   }
 
   public toJSON(): string {
     return JSON.stringify({
-      boardId: this._boardId,
-      name: this._name,
-      columns: this._columns,
-      groups: this._groups,
-      items: this._items,
+      _boardId: this._boardId,
+      _name: this._name,
+      _columns: this._columns,
+      _groups: this._groups,
+      _items: this._items,
     });
   }
-  
+
   public get boardId() {
     return this._boardId;
   }

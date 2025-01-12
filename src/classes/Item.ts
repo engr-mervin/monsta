@@ -1,7 +1,19 @@
 import { MonstaaError } from "../error";
 import { getItem } from "../queries/methods/getItem";
 import { ClientOptions, QueryRequestOptions } from "../types/types";
-import { Cell, CellValue } from "./Cell";
+import { Cell, CellValue, JSONCell } from "./Cell";
+
+export interface JSONItem {
+  _clientOptions: ClientOptions;
+  _itemId: number;
+  _name: string;
+  _groupId: string;
+  _boardId: number;
+  _values: Record<string, CellValue> | undefined;
+  _cells?: Record<string, JSONCell>;
+  _subitems?: JSONItem[];
+  _rawCells?: JSONCell[];
+}
 
 export class Item {
   private readonly _clientOptions!: ClientOptions;
@@ -9,10 +21,10 @@ export class Item {
   private _name: string;
   private _groupId: string;
   private _boardId: number;
-  private _values: Record<string, CellValue> | undefined =
-    undefined;
+  private _values: Record<string, CellValue> | undefined = undefined;
   private _cells?: Record<string, Cell>;
   private _subitems?: Item[];
+  private _rawCells?: Cell[];
 
   constructor(
     _clientOptions: ClientOptions,
@@ -34,7 +46,27 @@ export class Item {
     this._groupId = _groupId;
     this._boardId = _boardId;
     this._subitems = _subitems;
+    this._rawCells = _cells;
     this.buildMapping(_cells);
+  }
+
+  public static fromJSON(
+    clientOptions: ClientOptions,
+    jsonItem: JSONItem
+  ): Item {
+    return new Item(
+      clientOptions,
+      jsonItem._itemId,
+      jsonItem._name,
+      jsonItem._groupId,
+      jsonItem._boardId,
+      jsonItem._rawCells?.map(Cell.fromJSON),
+      jsonItem._subitems?.map((_item) => Item.fromJSON(clientOptions, _item))
+    );
+  }
+
+  public get rawCells() {
+    return this._rawCells;
   }
 
   public get itemId() {

@@ -1,3 +1,10 @@
+export interface JSONCell {
+  _columnId: string;
+  _type: string;
+  _text: string | null;
+  _value: Record<string, unknown>;
+  _title: string;
+}
 export class Cell {
   private _columnId: string;
   private _type: string;
@@ -17,6 +24,16 @@ export class Cell {
     this._type = _type;
     this._value = _value;
     this._title = _title;
+  }
+
+  public static fromJSON(jsonCell: JSONCell) {
+    return new Cell(
+      jsonCell._columnId,
+      jsonCell._text,
+      jsonCell._type,
+      jsonCell._value,
+      jsonCell._title
+    );
   }
 
   public get title() {

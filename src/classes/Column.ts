@@ -1,3 +1,9 @@
+export interface JSONColumn {
+  _columnId: string;
+  _type: string;
+  _title: string;
+}
+
 export class Column {
     private _columnId: string;
     private _type: string;
