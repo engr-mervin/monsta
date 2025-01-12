@@ -5,6 +5,13 @@ import { Column } from "./Column";
 import { Group } from "./Group";
 import { Item } from "./Item";
 
+export interface JSONBoard {
+  boardId: number;
+  name: string;
+  columns?: Column[];
+  groups?: Group[];
+  items?: Item[];
+}
 export class Board {
   private readonly _clientOptions!: ClientOptions;
   private _boardId: number;
@@ -34,6 +41,30 @@ export class Board {
     this._items = _items;
   }
 
+  public static fromJSON(
+    clientOptions: ClientOptions,
+    jsonBoard: JSONBoard
+  ): Board {
+    return new Board(
+      clientOptions,
+      jsonBoard.boardId,
+      jsonBoard.name,
+      jsonBoard.columns,
+      jsonBoard.groups,
+      jsonBoard.items
+    );
+  }
+
+  public toJSON(): string {
+    return JSON.stringify({
+      boardId: this._boardId,
+      name: this._name,
+      columns: this._columns,
+      groups: this._groups,
+      items: this._items,
+    });
+  }
+  
   public get boardId() {
     return this._boardId;
   }
